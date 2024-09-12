@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "module": "esnext",
+        "target": "esnext",
+        "moduleResolution": "bundler",
+        "esModuleInterop": true,
+        "strict": true,
+        "skipLibCheck": true,
+        "resolveJsonModule": true,
+        "jsx": "preserve",
+        "lib": ["esnext", "dom", "dom.iterable"],
+        "types": ["vite/client"]
+    },
+    "include": [".vitepress/**/*.vue", ".vitepress/**/*.ts"]
+}
