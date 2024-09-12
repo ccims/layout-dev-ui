@@ -31,7 +31,7 @@ export default defineConfig({
         },
 
         socialLinks: [
-            { icon: "github", link: "https://github.com/hylimo/hylimo" },
+            { icon: "github", link: "https://github.com/ccims/layout-dev-ui" },
         ],
     },
     vite: {
