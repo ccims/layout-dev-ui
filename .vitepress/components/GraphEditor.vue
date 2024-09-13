@@ -24,8 +24,7 @@ import "reflect-metadata";
 import { Splitpanes, Pane } from "splitpanes";
 import "splitpanes/dist/splitpanes.css";
 import { ref, onBeforeUnmount, watch, computed, toRaw, watchEffect } from "vue";
-import { ActionHandlerRegistry, IActionDispatcher, TYPES } from "sprotty";
-import { RequestModelAction, ActionMessage } from "sprotty-protocol";
+import { TYPES } from "sprotty";
 
 import {
     createContainer,
@@ -45,8 +44,6 @@ import { inject } from "vue";
 import { Disposable } from "vscode-languageserver-protocol";
 import {
     asyncComputed,
-    useLocalStorage,
-    useResizeObserver,
     watchImmediate,
 } from "@vueuse/core";
 import { v4 as uuid } from "uuid";
@@ -88,7 +85,7 @@ const colorTheme = computed(() =>
     isDark.value ? "Default Dark Modern" : "Default Light Modern"
 );
 
-watch(isDark, (value) => {
+watch(isDark, () => {
     updateUserConfiguration(
         JSON.stringify({ "workbench.colorTheme": colorTheme.value })
     );
@@ -128,7 +125,7 @@ const settings = inject(settingsKey);
 const layoutServerUrl = computed(() => settings!.value.serverUrl ?? "");
 
 const layout = asyncComputed<GraphLayout>(async () => {
-    if (parsedModel.value == undefined) {
+    if (parsedModel.value == undefined || layoutServerUrl.value == "") {
         return {};
     }
     const res = await fetch(layoutServerUrl.value, {
