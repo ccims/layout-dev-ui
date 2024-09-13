@@ -1,0 +1,13 @@
+hello:
+  name: Hello
+  template: Microservice
+  interfaces:
+    hello_rest:
+      name: REST
+      template: REST
+world:
+  name: World
+  template: Microservice
+  relations:
+    - to: hello_rest
+      template: Calls

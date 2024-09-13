@@ -76,9 +76,11 @@ const sprottyWrapper = ref<HTMLElement | null>(null);
 const disposables = shallowRef<Disposable[]>([]);
 const hideMainContent = ref(true);
 
-// useResizeObserver(sprottyWrapper, () => {
-//     actionDispatcher.value?.dispatch({ kind: ResetCanvasBoundsAction.KIND } satisfies ResetCanvasBoundsAction);
-// });
+watch(model, (value) => {
+    if (editor.value != undefined) {
+        editor.value.setValue(value);
+    }
+});
 
 const { isDark } = useData();
 
@@ -103,6 +105,7 @@ class ModelSource extends GraphModelSource {
     protected handleCreateRelation(context: CreateRelationContext): void {}
 }
 
+const editor = shallowRef<{ setValue(value: string): void }>()
 const modelSource = shallowRef<ModelSource | undefined>();
 
 const parsedModel = ref<Graph>();
@@ -175,9 +178,10 @@ onMounted(async () => {
     };
 
     await wrapper.initAndStart(userConfig, editorElement.value!);
-    const editor = wrapper.getEditor()!;
-    editor.onDidChangeModelContent(() => {
-        model.value = editor.getValue();
+    const monacoEditor = wrapper.getEditor()!;
+    editor.value = monacoEditor;
+    monacoEditor.onDidChangeModelContent(() => {
+        model.value = monacoEditor.getValue();
     });
 
     hideMainContent.value = false;

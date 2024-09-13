@@ -14,6 +14,9 @@
             <Teleport to="#export-diagram">
                 <IconButton label="Download source" icon="vpi-download" @click="downloadSource" />
             </Teleport>
+            <Teleport to="#diagram-list">
+                <DiagramList @open-diagram="code = $event" />
+            </Teleport>
         </ClientOnly>
     </div>
 </template>
@@ -26,10 +29,11 @@ import { ref } from "vue";
 import fileSaver from "file-saver";
 import { serialize, deserialize } from "../util/serialization.js";
 import { onBeforeMount } from "vue";
+import DiagramList from "./DiagramList.vue";
 
 const GraphEditor = defineClientComponent(() => import("./GraphEditor.vue"));
 
-const { isDark, site } = useData();
+const { site } = useData();
 const { width, height } = useWindowSize();
 
 const defaultCode = `hello:

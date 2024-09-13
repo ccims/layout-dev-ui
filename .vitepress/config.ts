@@ -15,6 +15,10 @@ export default defineConfig({
                 component: "NavTeleportTarget",
                 props: { "target-id": "export-diagram" },
             },
+            {
+                component: "NavTeleportTarget",
+                props: { "target-id": "diagram-list" },
+            },
             { component: "Settings" },
         ],
 
