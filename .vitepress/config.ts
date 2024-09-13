@@ -4,6 +4,7 @@ import importMetaUrlPlugin from '@codingame/esbuild-import-meta-url-plugin'
 
 export default defineConfig({
     title: "Gropius Layout DEV UI",
+    base: "/layout-dev-ui/",
     themeConfig: {
         nav: [
             { text: "Docs", link: "/docs/docs" },
