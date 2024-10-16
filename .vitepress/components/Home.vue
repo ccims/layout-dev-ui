@@ -65,7 +65,7 @@ onKeyStroke("s", (event) => {
 });
 
 function downloadSource() {
-    fileSaver.saveAs(new Blob([code.value]), "diagram.hyl");
+    fileSaver.saveAs(new Blob([code.value]), "diagram.yaml");
 }
 
 function copyLink() {
