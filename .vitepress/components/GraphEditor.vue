@@ -44,6 +44,7 @@ import { inject } from "vue";
 import { Disposable } from "vscode-languageserver-protocol";
 import {
     asyncComputed,
+    refThrottled,
     watchImmediate,
 } from "@vueuse/core";
 import { v4 as uuid } from "uuid";
@@ -74,7 +75,7 @@ const disposables = shallowRef<Disposable[]>([]);
 const hideMainContent = ref(true);
 
 watch(model, (value) => {
-    if (editor.value != undefined) {
+    if (editor.value != undefined && editor.value.getValue() != value) {
         editor.value.setValue(value);
     }
 });
@@ -102,7 +103,7 @@ class ModelSource extends GraphModelSource {
     protected handleCreateRelation(context: CreateRelationContext): void {}
 }
 
-const editor = shallowRef<{ setValue(value: string): void }>()
+const editor = shallowRef<{ setValue(value: string): void; getValue(): string }>()
 const modelSource = shallowRef<ModelSource | undefined>();
 
 const parsedModel = ref<Graph>();
@@ -124,8 +125,11 @@ const settings = inject(settingsKey);
 
 const layoutServerUrl = computed(() => settings!.value.serverUrl ?? "");
 
+const throttledParsedModel = refThrottled(parsedModel, 800, true, true);
+
 const layout = asyncComputed<GraphLayout>(async () => {
-    if (parsedModel.value == undefined || layoutServerUrl.value == "") {
+    const modelValue = throttledParsedModel.value;
+    if (modelValue == undefined || layoutServerUrl.value == "") {
         return {};
     }
     const res = await fetch(layoutServerUrl.value, {
@@ -133,7 +137,7 @@ const layout = asyncComputed<GraphLayout>(async () => {
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify(toRaw(parsedModel.value)),
+        body: JSON.stringify(toRaw(modelValue)),
     }).then((response) => response.json());
     return res.data;
 }, {});
@@ -142,10 +146,10 @@ watchEffect(() => {
     if (
         layout.value != undefined &&
         modelSource.value != undefined &&
-        parsedModel.value != null
+        throttledParsedModel.value != null
     ) {
         modelSource.value.updateGraph({
-            graph: parsedModel.value,
+            graph: throttledParsedModel.value,
             layout: layout.value,
             fitToBounds: true,
         });
