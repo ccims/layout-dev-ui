@@ -35,6 +35,7 @@ onClickOutside(dialog, () => {
 
 const diagrams: Record<string, () => Promise<any>> = {
     "Hello world": () => import("../../diagrams/hello_world.yaml?raw"),
+    "Webshop Except Sample": () => import("../../diagrams/webshop-excerpt-sample.yaml?raw"),
 }
 
 async function openDiagram(name: string) {

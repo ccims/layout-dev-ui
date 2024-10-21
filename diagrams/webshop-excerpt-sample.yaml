@@ -1,0 +1,68 @@
+Inventory:
+  name: Inventory Service
+  template: Microservice
+  interfaces:
+    inventory_GraphQL:
+      name: GraphQL
+      template: GraphQL
+  relations:
+    - to: Kubernetes
+      template: Hosted on
+    - to: InventoryDB
+      template: DB connection
+    - to: Apollo
+      template: Includes
+InventoryDB:
+  name: InventoryDB
+  template: Database
+Apollo:
+  name: Apollo
+  template: Library
+ShoppingCart:
+  name: Shopping Cart Service
+  template: Microservice
+  interfaces:
+    shoppingCart_REST:
+      name: REST
+      template: REST
+  relations:
+    - to: inventory_GraphQL
+      template: Calls
+    - to: Kubernetes
+      template: Hosted on
+Order:
+  name: Order Service
+  template: Microservice
+  interfaces:
+    order_REST:
+      name: REST
+      template: REST
+  relations:
+    - to: inventory_GraphQL
+      template: Calls
+    - to: Kubernetes
+      template: Hosted on
+    - to: ExpressJS
+      template: Includes
+ExpressJS:
+  name: Express.js
+  template: Library
+APIGateway:
+  name: API Gateway
+  template: Misc
+  relations:
+    - to: shoppingCart_REST
+      template: Calls
+    - to: inventory_GraphQL
+      template: Calls
+    - to: order_REST
+      template: Calls
+Frontend:
+  name: Frontend
+  template: Frontend
+  relations:
+    - to: APIGateway
+      template: Calls
+Kubernetes:
+  name: Kubernetes
+  template: Infrastructure
