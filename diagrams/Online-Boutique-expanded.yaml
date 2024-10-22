@@ -1,0 +1,234 @@
+Frontend:
+  name: Frontend
+  template: Frontend
+  relations:
+    - to: APIGateway
+      template: Calls
+    - to: Kubernetes
+      template: Hosted on
+
+APIGateway:
+  name: API Gateway
+  template: Misc
+  relations:
+    - to: productCatalog_REST
+      template: Calls
+    - to: cart_gRPC
+      template: Calls
+    - to: checkout_gRPC
+      template: Calls
+    - to: payment_gRPC
+      template: Calls
+    - to: shipping_REST
+      template: Calls
+    - to: recommendation_gRPC
+      template: Calls
+    - to: email_REST
+      template: Calls
+    - to: userAuth_REST
+      template: Calls
+    - to: orderHistory_REST
+      template: Calls
+    - to: inventory_REST
+      template: Calls
+    - to: review_REST
+      template: Calls
+    - to: analytics_REST
+      template: Calls
+    - to: Kubernetes
+      template: Hosted on
+
+ProductCatalog:
+  name: Product Catalog Service
+  template: Microservice
+  interfaces:
+    productCatalog_REST:
+      name: REST
+      template: REST
+  relations:
+    - to: Kubernetes
+      template: Hosted on
+
+Cart:
+  name: Cart Service
+  template: Microservice
+  interfaces:
+    cart_gRPC:
+      name: gRPC
+      template: gRPC
+  relations:
+    - to: Kubernetes
+      template: Hosted on
+
+Checkout:
+  name: Checkout Service
+  template: Microservice
+  interfaces:
+    checkout_gRPC:
+      name: gRPC
+      template: gRPC
+  relations:
+    - to: payment_gRPC
+      template: Calls
+    - to: shipping_REST
+      template: Calls
+    - to: inventory_REST
+      template: Calls
+    - to: orderHistory_REST
+      template: Calls
+    - to: Kubernetes
+      template: Hosted on
+
+Payment:
+  name: Payment Service
+  template: Microservice
+  interfaces:
+    payment_gRPC:
+      name: gRPC
+      template: gRPC
+  relations:
+    - to: Kubernetes
+      template: Hosted on
+
+Shipping:
+  name: Shipping Service
+  template: Microservice
+  interfaces:
+    shipping_REST:
+      name: REST
+      template: REST
+  relations:
+    - to: Kubernetes
+      template: Hosted on
+
+Recommendation:
+  name: Recommendation Service
+  template: Microservice
+  interfaces:
+    recommendation_gRPC:
+      name: gRPC
+      template: gRPC
+  relations:
+    - to: Kubernetes
+      template: Hosted on
+
+Email:
+  name: Email Service
+  template: Microservice
+  interfaces:
+    email_REST:
+      name: REST
+      template: REST
+  relations:
+    - to: Kubernetes
+      template: Hosted on
+
+UserAuth:
+  name: User Authentication Service
+  template: Microservice
+  interfaces:
+    userAuth_REST:
+      name: REST
+      template: REST
+  relations:
+    - to: Kubernetes
+      template: Hosted on
+
+Inventory:
+  name: Inventory Management Service
+  template: Microservice
+  interfaces:
+    inventory_REST:
+      name: REST
+      template: REST
+  relations:
+    - to: productCatalog_REST
+      template: Calls
+    - to: checkout_gRPC
+      template: Called by
+    - to: APIGateway
+      template: Called by
+    - to: Kubernetes
+      template: Hosted on
+
+Review:
+  name: Review Service
+  template: Microservice
+  interfaces:
+    review_REST:
+      name: REST
+      template: REST
+  relations:
+    - to: productCatalog_REST
+      template: Calls
+    - to: APIGateway
+      template: Called by
+    - to: Kubernetes
+      template: Hosted on
+
+OrderHistory:
+  name: Order History Service
+  template: Microservice
+  interfaces:
+    orderHistory_REST:
+      name: REST
+      template: REST
+  relations:
+    - to: checkout_gRPC
+      template: Called by
+    - to: APIGateway
+      template: Called by
+    - to: analytics_REST
+      template: Calls
+    - to: Kubernetes
+      template: Hosted on
+
+Analytics:
+  name: Analytics Service
+  template: Microservice
+  interfaces:
+    analytics_REST:
+      name: REST
+      template: REST
+  relations:
+    - to: orderHistory_REST
+      template: Calls
+    - to: APIGateway
+      template: Called by
+    - to: Kubernetes
+      template: Hosted on
+
+Kubernetes:
+  name: Kubernetes
+  template: Infrastructure
+  relations:
+    - to: Istio
+      template: Includes
+    - to: Envoy
+      template: Includes
+    - to: Prometheus
+      template: Uses
+    - to: Grafana
+      template: Uses
+    - to: Jaeger
+      template: Uses
+
+Istio:
+  name: Istio
+  template: Library
+
+Envoy:
+  name: Envoy
+  template: Library
+
+Prometheus:
+  name: Prometheus
+  template: Misc
+
+Grafana:
+  name: Grafana
+  template: Misc
+
+Jaeger:
+  name: Jaeger
+  template: Misc

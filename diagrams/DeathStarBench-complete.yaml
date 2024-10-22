@@ -1,0 +1,246 @@
+# Social Network Application
+FrontendSocialNetwork:
+  name: Frontend Social Network
+  template: Frontend
+  relations:
+    - to: APIGatewaySocialNetwork
+      template: Calls
+
+APIGatewaySocialNetwork:
+  name: API Gateway Social Network
+  template: Microservice
+  relations:
+    - to: user_REST
+      template: Calls
+    - to: post_REST
+      template: Calls
+    - to: timeline_REST
+      template: Calls
+    - to: notification_REST
+      template: Calls
+
+UserService:
+  name: User Service
+  template: Microservice
+  interfaces:
+    user_REST:
+      name: REST
+      template: REST
+
+PostService:
+  name: Post Service
+  template: Microservice
+  interfaces:
+    post_REST:
+      name: REST
+      template: REST
+
+TimelineService:
+  name: Timeline Service
+  template: Microservice
+  interfaces:
+    timeline_REST:
+      name: REST
+      template: REST
+  relations:
+    - to: post_REST
+      template: Calls
+
+NotificationService:
+  name: Notification Service
+  template: Microservice
+  interfaces:
+    notification_REST:
+      name: REST
+      template: REST
+  relations:
+    - to: Kafka
+      template: Uses
+
+Kafka:
+  name: Kafka
+  template: Messaging
+
+# Media Service Application
+FrontendMedia:
+  name: Frontend Media Service
+  template: Frontend
+  relations:
+    - to: APIGatewayMedia
+      template: Calls
+
+APIGatewayMedia:
+  name: API Gateway Media Service
+  template: Microservice
+  relations:
+    - to: videoUpload_REST
+      template: Calls
+    - to: videoEncode_REST
+      template: Calls
+    - to: videoPlayback_REST
+      template: Calls
+    - to: videoRecommendation_REST
+      template: Calls
+    - to: comment_REST
+      template: Calls
+
+VideoUploadService:
+  name: Video Upload Service
+  template: Microservice
+  interfaces:
+    videoUpload_REST:
+      name: REST
+      template: REST
+
+VideoEncodeService:
+  name: Video Encode Service
+  template: Microservice
+  interfaces:
+    videoEncode_REST:
+      name: REST
+      template: REST
+
+VideoPlaybackService:
+  name: Video Playback Service
+  template: Microservice
+  interfaces:
+    videoPlayback_REST:
+      name: REST
+      template: REST
+
+VideoRecommendationService:
+  name: Video Recommendation Service
+  template: Microservice
+  interfaces:
+    videoRecommendation_REST:
+      name: REST
+      template: REST
+
+CommentService:
+  name: Comment Service
+  template: Microservice
+  interfaces:
+    comment_REST:
+      name: REST
+      template: REST
+
+# Online Boutique Application
+FrontendBoutique:
+  name: Frontend Online Boutique
+  template: Frontend
+  relations:
+    - to: APIGatewayBoutique
+      template: Calls
+
+APIGatewayBoutique:
+  name: API Gateway Online Boutique
+  template: Microservice
+  relations:
+    - to: productCatalog_REST
+      template: Calls
+    - to: cart_REST
+      template: Calls
+    - to: checkout_REST
+      template: Calls
+    - to: payment_REST
+      template: Calls
+    - to: order_REST
+      template: Calls
+
+ProductCatalogService:
+  name: Product Catalog Service
+  template: Microservice
+  interfaces:
+    productCatalog_REST:
+      name: REST
+      template: REST
+
+CartService:
+  name: Cart Service
+  template: Microservice
+  interfaces:
+    cart_REST:
+      name: REST
+      template: REST
+
+CheckoutService:
+  name: Checkout Service
+  template: Microservice
+  interfaces:
+    checkout_REST:
+      name: REST
+      template: REST
+  relations:
+    - to: payment_REST
+      template: Calls
+
+PaymentService:
+  name: Payment Service
+  template: Microservice
+  interfaces:
+    payment_REST:
+      name: REST
+      template: REST
+
+OrderService:
+  name: Order Service
+  template: Microservice
+  interfaces:
+    order_REST:
+      name: REST
+      template: REST
+
+# Hotel Reservation Application
+FrontendHotel:
+  name: Frontend Hotel Reservation
+  template: Frontend
+  relations:
+    - to: APIGatewayHotel
+      template: Calls
+
+APIGatewayHotel:
+  name: API Gateway Hotel Reservation
+  template: Microservice
+  relations:
+    - to: hotel_REST
+      template: Calls
+    - to: availability_REST
+      template: Calls
+    - to: reservation_REST
+      template: Calls
+    - to: payment_REST
+      template: Calls
+    - to: userProfile_REST
+      template: Calls
+
+HotelService:
+  name: Hotel Service
+  template: Microservice
+  interfaces:
+    hotel_REST:
+      name: REST
+      template: REST
+
+AvailabilityService:
+  name: Availability Service
+  template: Microservice
+  interfaces:
+    availability_REST:
+      name: REST
+      template: REST
+
+ReservationService:
+  name: Reservation Service
+  template: Microservice
+  interfaces:
+    reservation_REST:
+      name: REST
+      template: REST
+
+UserProfileService:
+  name: User Profile Service
+  template: Microservice
+  interfaces:
+    userProfile_REST:
+      name: REST
+      template: REST

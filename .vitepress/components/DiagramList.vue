@@ -39,6 +39,8 @@ const diagrams: Record<string, () => Promise<any>> = {
     "TeaStore": () => import("../../diagrams/TeaStore.yaml?raw"),
     "Sock Shop": () => import("../../diagrams/Sock-Shop.yaml?raw"),
     "Train Ticket": () => import("../../diagrams/Train-Ticket.yaml?raw"),
+    "DeathStarBench": () => import("../../diagrams/DeathStarBench-complete.yaml?raw"),
+    "Online Boutique (expanded)": () => import("../../diagrams/Online-Boutique-expanded.yaml?raw"),
 }
 
 async function openDiagram(name: string) {
