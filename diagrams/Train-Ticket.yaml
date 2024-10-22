@@ -1,0 +1,155 @@
+Frontend:
+  name: Frontend Service
+  template: Frontend
+  relations:
+    - to: APIGateway
+      template: Calls
+    - to: Kubernetes
+      template: Hosted on
+
+APIGateway:
+  name: API Gateway
+  template: Microservice
+  relations:
+    - to: user_REST
+      template: Calls
+    - to: train_REST
+      template: Calls
+    - to: booking_REST
+      template: Calls
+    - to: order_REST
+      template: Calls
+    - to: payment_REST
+      template: Calls
+    - to: notification_REST
+      template: Calls
+    - to: Kubernetes
+      template: Hosted on
+
+User:
+  name: User Service
+  template: Microservice
+  interfaces:
+    user_REST:
+      name: REST
+      template: REST
+  relations:
+    - to: UserDB
+      template: DB connection
+    - to: Kubernetes
+      template: Hosted on
+
+UserDB:
+  name: User Database
+  template: Database
+
+Train:
+  name: Train Service
+  template: Microservice
+  interfaces:
+    train_REST:
+      name: REST
+      template: REST
+  relations:
+    - to: TrainDB
+      template: DB connection
+    - to: Kubernetes
+      template: Hosted on
+
+TrainDB:
+  name: Train Database
+  template: Database
+
+Route:
+  name: Route Service
+  template: Microservice
+  interfaces:
+    route_REST:
+      name: REST
+      template: REST
+  relations:
+    - to: RouteDB
+      template: DB connection
+    - to: Kubernetes
+      template: Hosted on
+
+RouteDB:
+  name: Route Database
+  template: Database
+
+Booking:
+  name: Booking Service
+  template: Microservice
+  interfaces:
+    booking_REST:
+      name: REST
+      template: REST
+  relations:
+    - to: BookingDB
+      template: DB connection
+    - to: payment_REST
+      template: Calls
+    - to: Kubernetes
+      template: Hosted on
+
+BookingDB:
+  name: Booking Database
+  template: Database
+
+Order:
+  name: Order Service
+  template: Microservice
+  interfaces:
+    order_REST:
+      name: REST
+      template: REST
+  relations:
+    - to: OrderDB
+      template: DB connection
+    - to: Kubernetes
+      template: Hosted on
+
+OrderDB:
+  name: Order Database
+  template: Database
+
+Payment:
+  name: Payment Service
+  template: Microservice
+  interfaces:
+    payment_REST:
+      name: REST
+      template: REST
+  relations:
+    - to: PaymentDB
+      template: DB connection
+    - to: Kubernetes
+      template: Hosted on
+
+PaymentDB:
+  name: Payment Database
+  template: Database
+
+Notification:
+  name: Notification Service
+  template: Microservice
+  interfaces:
+    notification_REST:
+      name: REST
+      template: REST
+  relations:
+    - to: Kubernetes
+      template: Hosted on
+
+Security:
+  name: Security Service
+  template: Microservice
+  relations:
+    - to: user_REST
+      template: Calls
+    - to: Kubernetes
+      template: Hosted on
+
+Kubernetes:
+  name: Kubernetes
+  template: Infrastructure

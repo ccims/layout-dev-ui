@@ -1,0 +1,150 @@
+WebUI:
+  name: WebUI Service
+  template: Microservice
+  interfaces:
+    webui_REST:
+      name: REST
+      template: REST
+  relations:
+    - to: recommender_REST
+      template: Calls
+    - to: auth_REST
+      template: Calls
+    - to: Kubernetes
+      template: Hosted on
+    - to: SpringBoot
+      template: Includes
+    - to: Jersey
+      template: Includes
+    - to: Jackson
+      template: Includes
+    - to: SLF4J
+      template: Includes
+    - to: Logback
+      template: Includes
+
+Auth:
+  name: Auth Service
+  template: Microservice
+  interfaces:
+    auth_REST:
+      name: REST
+      template: REST
+  relations:
+    - to: PersistenceDB
+      template: DB connection
+    - to: Kubernetes
+      template: Hosted on
+    - to: SpringBoot
+      template: Includes
+    - to: JPA
+      template: Includes
+    - to: Jackson
+      template: Includes
+    - to: SLF4J
+      template: Includes
+    - to: Logback
+      template: Includes
+
+Persistence:
+  name: Persistence Service
+  template: Microservice
+  interfaces:
+    persistence_REST:
+      name: REST
+      template: REST
+  relations:
+    - to: PersistenceDB
+      template: DB connection
+    - to: Kubernetes
+      template: Hosted on
+    - to: SpringBoot
+      template: Includes
+    - to: JPA
+      template: Includes
+    - to: MySQLConnectorJ
+      template: Includes
+    - to: Jackson
+      template: Includes
+    - to: SLF4J
+      template: Includes
+    - to: Logback
+      template: Includes
+
+Recommender:
+  name: Recommender Service
+  template: Microservice
+  interfaces:
+    recommender_REST:
+      name: REST
+      template: REST
+  relations:
+    - to: PersistenceDB
+      template: DB connection
+    - to: Kubernetes
+      template: Hosted on
+    - to: SpringBoot
+      template: Includes
+    - to: Jackson
+      template: Includes
+    - to: SLF4J
+      template: Includes
+    - to: Logback
+      template: Includes
+
+Image:
+  name: Image Service
+  template: Microservice
+  interfaces:
+    image_REST:
+      name: REST
+      template: REST
+  relations:
+    - to: PersistenceDB
+      template: DB connection
+    - to: Kubernetes
+      template: Hosted on
+    - to: SpringBoot
+      template: Includes
+    - to: Jackson
+      template: Includes
+    - to: SLF4J
+      template: Includes
+    - to: Logback
+      template: Includes
+
+PersistenceDB:
+  name: PersistenceDB
+  template: Database
+
+Kubernetes:
+  name: Kubernetes
+  template: Infrastructure
+
+SpringBoot:
+  name: Spring Boot
+  template: Library
+
+JPA:
+  name: JPA
+  template: Library
+
+MySQLConnectorJ:
+  name: MySQL Connector/J
+  template: Library
+
+Jackson:
+  name: Jackson
+  template: Library
+
+Jersey:
+  name: Jersey
+  template: Library
+
+SLF4J:
+  name: SLF4J
+  template: Library
+
+Logback:
+  name: Logback
+  template: Library

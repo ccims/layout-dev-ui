@@ -1,0 +1,182 @@
+Frontend:
+  name: Frontend
+  template: Frontend
+  interfaces:
+    frontend_REST:
+      name: REST
+      template: REST
+  relations:
+    - to: APIGateway
+      template: Calls
+    - to: Kubernetes
+      template: Hosted on
+
+APIGateway:
+  name: API Gateway
+  template: Microservice
+  relations:
+    - to: Frontend
+      template: Calls
+    - to: catalog_REST
+      template: Calls
+    - to: orders_REST
+      template: Calls
+    - to: users_REST
+      template: Calls
+    - to: payment_REST
+      template: Calls
+    - to: shipping_REST
+      template: Calls
+    - to: Kubernetes
+      template: Hosted on
+
+Catalog:
+  name: Catalog Service
+  template: Microservice
+  interfaces:
+    catalog_REST:
+      name: REST
+      template: REST
+  relations:
+    - to: CatalogDB
+      template: DB connection
+    - to: Kubernetes
+      template: Hosted on
+    - to: SpringBoot
+      template: Includes
+    - to: MongoDBDriver
+      template: Includes
+    - to: Jackson
+      template: Includes
+    - to: SLF4J
+      template: Includes
+    - to: Logback
+      template: Includes
+
+CatalogDB:
+  name: CatalogDB
+  template: Database
+
+Orders:
+  name: Order Service
+  template: Microservice
+  interfaces:
+    orders_REST:
+      name: REST
+      template: REST
+  relations:
+    - to: OrdersDB
+      template: DB connection
+    - to: shipping_REST
+      template: Calls
+    - to: Kubernetes
+      template: Hosted on
+    - to: SpringBoot
+      template: Includes
+    - to: MySQLConnectorJ
+      template: Includes
+    - to: Jackson
+      template: Includes
+    - to: SLF4J
+      template: Includes
+    - to: Logback
+      template: Includes
+
+OrdersDB:
+  name: OrdersDB
+  template: Database
+
+Users:
+  name: User Service
+  template: Microservice
+  interfaces:
+    users_REST:
+      name: REST
+      template: REST
+  relations:
+    - to: UsersDB
+      template: DB connection
+    - to: Kubernetes
+      template: Hosted on
+    - to: SpringBoot
+      template: Includes
+    - to: MongoDBDriver
+      template: Includes
+    - to: Jackson
+      template: Includes
+    - to: SLF4J
+      template: Includes
+    - to: Logback
+      template: Includes
+
+UsersDB:
+  name: UsersDB
+  template: Database
+
+Payment:
+  name: Payment Service
+  template: Microservice
+  interfaces:
+    payment_REST:
+      name: REST
+      template: REST
+  relations:
+    - to: Kubernetes
+      template: Hosted on
+    - to: SpringBoot
+      template: Includes
+    - to: Jackson
+      template: Includes
+    - to: SLF4J
+      template: Includes
+    - to: Logback
+      template: Includes
+
+Shipping:
+  name: Shipping Service
+  template: Microservice
+  interfaces:
+    shipping_REST:
+      name: REST
+      template: REST
+  relations:
+    - to: orders_REST
+      template: Calls
+    - to: Kubernetes
+      template: Hosted on
+    - to: SpringBoot
+      template: Includes
+    - to: Jackson
+      template: Includes
+    - to: SLF4J
+      template: Includes
+    - to: Logback
+      template: Includes
+
+Kubernetes:
+  name: Kubernetes
+  template: Infrastructure
+
+SpringBoot:
+  name: Spring Boot
+  template: Library
+
+MongoDBDriver:
+  name: MongoDB Java Driver
+  template: Library
+
+MySQLConnectorJ:
+  name: MySQL Connector/J
+  template: Library
+
+Jackson:
+  name: Jackson
+  template: Library
+
+SLF4J:
+  name: SLF4J
+  template: Library
+
+Logback:
+  name: Logback
+  template: Library
