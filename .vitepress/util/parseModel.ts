@@ -1,18 +1,19 @@
-import { ComponentVersion, Graph, Relation } from "@gropius/graph-editor";
+import { Graph } from "@gropius/graph-editor";
 import { parse } from "yaml";
 import { Model } from "./model";
 import { componentStyles, interfaceStyles, relationStyles } from "./styles";
 
 export function parseModel(model: string): Graph {
     const parsedModel = parse(model) as Model;
-    const components: ComponentVersion[] = [];
-    const relations: Relation[] = [];
+    const components = [];
+    const relations = [];
     let relationIdCounter = 0;
     for (const [key, component] of Object.entries(parsedModel)) {
         components.push({
             id: key,
             name: component?.name ?? key,
             style: componentStyles[component?.template ?? "Misc"] ?? componentStyles.Misc,
+            template: component?.template ?? "Misc",
             issueTypes: [],
             contextMenu: "",
             interfaces: Object.entries(component?.interfaces ?? {}).map(
@@ -24,6 +25,7 @@ export function parseModel(model: string): Graph {
                             start: key,
                             end: relation.to,
                             style: relationStyles[relation.template ?? "General"] ?? relationStyles.General,
+                            template: relation.template ?? "General",
                             contextMenu: "",
                         }))
                     );
@@ -31,6 +33,7 @@ export function parseModel(model: string): Graph {
                         id: key,
                         name: iface?.name,
                         style: interfaceStyles[iface?.template ?? "REST"] ?? interfaceStyles.REST,
+                        template: iface?.template ?? "REST",
                         issueTypes: [],
                         contextMenu: "",
                     };
@@ -44,6 +47,7 @@ export function parseModel(model: string): Graph {
                 start: key,
                 end: relation.to,
                 style: relationStyles[relation.template ?? "General"] ?? relationStyles.General,
+                template: relation.template ?? "General",
                 contextMenu: "",
             }))
         );

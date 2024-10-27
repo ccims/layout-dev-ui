@@ -13,12 +13,14 @@ interface Graph {
 interface ComponentVersion extends Node {
     name: string;
     style: ShapeStyle;
+    template: string;
     interfaces: Interface[];
 }
 
 interface Interface extends Node {
     name: string;
     style: ShapeStyle;
+    template: string;
 };
 
 interface Relation extends Node {
@@ -26,6 +28,7 @@ interface Relation extends Node {
     start: string;
     end: string;
     style: RelationStyle;
+    template: string;
 }
 
 interface Node {
