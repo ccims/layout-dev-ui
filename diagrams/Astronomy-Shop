@@ -1,0 +1,166 @@
+accountingservice:
+  name: Accounting Service
+  template: Microservice
+
+adservice:
+  name: Ad Service
+  template: Microservice
+  interfaces:
+    adservice_gRPC:
+      name: gRPC
+      template: gRPC
+
+cartservice:
+  name: Cart Service
+  template: Microservice
+  interfaces:
+    cartservice_gRPC:
+      name: gRPC
+      template: gRPC
+  relations:
+    - to: redis
+      template: Calls
+
+checkoutservice:
+  name: Checkout Service
+  template: Microservice
+  interfaces:
+    checkoutservice_gRPC:
+      name: gRPC
+      template: gRPC
+  relations:
+    - to: cartservice_gRPC
+      template: Calls
+    - to: productcatalogservice_gRPC
+      template: Calls
+    - to: currencyservice_gRPC
+      template: Calls
+    - to: emailservice_REST
+      template: Calls
+    - to: paymentservice_gRPC
+      template: Calls
+    - to: shippingservice_gRPC
+      template: Calls
+    - to: kafka
+      template: Calls
+
+currencyservice:
+  name: Currency Service
+  template: Microservice
+  interfaces:
+    currencyservice_gRPC:
+      name: gRPC
+      template: gRPC
+
+emailservice:
+  name: Email Service
+  template: Microservice
+  interfaces:
+    emailservice_REST:
+      name: REST
+      template: REST
+
+frauddetectionservice:
+  name: Fraud Detection Service
+  template: Microservice
+
+frontend:
+  name: Frontend
+  template: Frontend
+  interfaces:
+    frontend_REST:
+      name: REST
+      template: REST
+  relations:
+    - to: cartservice_gRPC
+      template: Calls
+    - to: currencyservice_gRPC
+      template: Calls
+    - to: adservice_gRPC
+      template: Calls
+    - to: productcatalogservice_gRPC
+      template: Calls
+    - to: checkoutservice_gRPC
+      template: Calls
+    - to: recommendationservice_gRPC
+      template: Calls
+
+frontendproxy:
+  name: Frontend Proxy
+  template: Frontend
+  interfaces:
+    frontendproxy_REST:
+      name: REST
+      template: REST
+  relations:
+    - to: frontend_REST
+      template: Calls
+    - to: imageprovider_REST
+      template: Calls
+
+imageprovider:
+  name: Image Provider
+  template: Microservice
+  interfaces:
+    imageprovider_REST:
+      name: REST
+      template: REST
+
+kafka:
+  name: Kafka
+  template: Messaging
+  relations:
+    - to: accountingservice
+      template: Calls
+    - to: frauddetectionservice
+      template: Calls
+
+paymentservice:
+  name: Payment Service
+  template: Microservice
+  interfaces:
+    paymentservice_gRPC:
+      name: gRPC
+      template: gRPC
+
+productcatalogservice:
+  name: Product Catalog Service
+  template: Microservice
+  interfaces:
+    productcatalogservice_gRPC:
+      name: gRPC
+      template: gRPC
+
+quoteservice:
+  name: Quote Service
+  template: Microservice
+  interfaces:
+    quoteservice_REST:
+      name: REST
+      template: REST
+
+recommendationservice:
+  name: Recommendation Service
+  template: Microservice
+  interfaces:
+    recommendationservice_gRPC:
+      name: gRPC
+      template: gRPC
+  relations:
+    - to: productcatalogservice_gRPC
+      template: Calls
+
+redis:
+  name: Redis
+  template: Database
+
+shippingservice:
+  name: Shipping Service
+  template: Microservice
+  interfaces:
+    shippingservice_gRPC:
+      name: gRPC
+      template: gRPC
+  relations:
+    - to: quoteservice_REST
+      template: Calls
