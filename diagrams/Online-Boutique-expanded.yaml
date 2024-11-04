@@ -144,10 +144,6 @@ Inventory:
   relations:
     - to: productCatalog_REST
       template: Calls
-    - to: checkout_gRPC
-      template: Called by
-    - to: APIGateway
-      template: Called by
     - to: Kubernetes
       template: Hosted on
 
@@ -161,8 +157,6 @@ Review:
   relations:
     - to: productCatalog_REST
       template: Calls
-    - to: APIGateway
-      template: Called by
     - to: Kubernetes
       template: Hosted on
 
@@ -174,10 +168,6 @@ OrderHistory:
       name: REST
       template: REST
   relations:
-    - to: checkout_gRPC
-      template: Called by
-    - to: APIGateway
-      template: Called by
     - to: analytics_REST
       template: Calls
     - to: Kubernetes
@@ -193,8 +183,6 @@ Analytics:
   relations:
     - to: orderHistory_REST
       template: Calls
-    - to: APIGateway
-      template: Called by
     - to: Kubernetes
       template: Hosted on
 
