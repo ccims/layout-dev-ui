@@ -20,7 +20,7 @@
     },
     "dependencies": {
         "@codingame/monaco-vscode-yaml-default-extension": "^8.0.4",
-        "@gropius/graph-editor": "^0.0.2",
+        "@gropius/graph-editor": "^0.0.3",
         "@vueuse/core": "^11.1.0",
         "file-saver": "^2.0.5",
         "js-base64": "^3.7.7",
