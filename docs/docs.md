@@ -21,6 +21,7 @@ interface Interface extends Node {
     name: string;
     style: ShapeStyle;
     template: string;
+    size: { width: number; height: number };
 };
 
 interface Relation extends Node {

@@ -25,6 +25,7 @@ import { Splitpanes, Pane } from "splitpanes";
 import "splitpanes/dist/splitpanes.css";
 import { ref, onBeforeUnmount, watch, computed, toRaw, watchEffect } from "vue";
 import { TYPES } from "sprotty";
+import { RequestBoundsAction } from "sprotty-protocol";
 
 import {
     createContainer,
@@ -33,6 +34,7 @@ import {
     GraphLayout,
     GraphModelSource,
     SelectedElement,
+    ShapeGenerator
 } from "@gropius/graph-editor";
 import { onMounted } from "vue";
 import {
@@ -42,11 +44,7 @@ import {
 import { shallowRef } from "vue";
 import { inject } from "vue";
 import { Disposable } from "vscode-languageserver-protocol";
-import {
-    asyncComputed,
-    refThrottled,
-    watchImmediate,
-} from "@vueuse/core";
+import { asyncComputed, refThrottled, watchImmediate } from "@vueuse/core";
 import { v4 as uuid } from "uuid";
 import "@codingame/monaco-vscode-yaml-default-extension";
 import { useData } from "vitepress";
@@ -93,6 +91,7 @@ watch(isDark, () => {
 });
 
 class ModelSource extends GraphModelSource {
+    protected navigateToElement(element: string): void {}
     protected layoutUpdated(
         partialUpdate: GraphLayout,
         resultingLayout: GraphLayout
@@ -103,7 +102,10 @@ class ModelSource extends GraphModelSource {
     protected handleCreateRelation(context: CreateRelationContext): void {}
 }
 
-const editor = shallowRef<{ setValue(value: string): void; getValue(): string }>()
+const editor = shallowRef<{
+    setValue(value: string): void;
+    getValue(): string;
+}>();
 const modelSource = shallowRef<ModelSource | undefined>();
 
 const parsedModel = ref<Graph>();
@@ -127,17 +129,64 @@ const layoutServerUrl = computed(() => settings!.value.serverUrl ?? "");
 
 const throttledParsedModel = refThrottled(parsedModel, 800, true, true);
 
+const shapeGenerator = new ShapeGenerator();
+
+function enhanceModel(
+    model: Graph,
+    sizes: Map<string, { width: number; height: number }>
+) {
+    for (const component of model.components) {
+        enhanceModelElement(component, sizes);
+        for (const inter of component.interfaces) {
+            enhanceModelElement(inter, sizes);
+        }
+    }
+    return model;
+}
+
+function enhanceModelElement(
+    element: any,
+    sizes: Map<string, { width: number; height: number }>
+) {
+    const size = sizes.get(element.id + "-name");
+    const bounds = {
+        width: size?.width ?? 0,
+        height: size?.height ?? 0,
+        x: 0,
+        y: 0,
+    }
+    const shapeSize = shapeGenerator.generateForInnerBounds(element.style.shape, bounds, element.style)
+    element["size"] = { width: shapeSize.bounds.width, height: shapeSize.bounds.height };
+}
+
 const layout = asyncComputed<GraphLayout>(async () => {
     const modelValue = throttledParsedModel.value;
-    if (modelValue == undefined || layoutServerUrl.value == "") {
+    if (
+        modelValue == undefined ||
+        layoutServerUrl.value == "" ||
+        modelSource.value == undefined
+    ) {
         return {};
+    }
+    const boundsRes = await modelSource.value.actionDispatcher.request(
+        RequestBoundsAction.create(
+            (modelSource.value as any).createRoot(
+                throttledParsedModel.value,
+                {},
+                true
+            )
+        )
+    );
+    const sizesMap = new Map<string, { width: number; height: number }>();
+    for (const bound of boundsRes.bounds) {
+        sizesMap.set(bound.elementId, bound.newSize);
     }
     const res = await fetch(layoutServerUrl.value, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify(toRaw(modelValue)),
+        body: JSON.stringify(enhanceModel(toRaw(modelValue), sizesMap)),
     }).then((response) => response.json());
     return res.data;
 }, {});
