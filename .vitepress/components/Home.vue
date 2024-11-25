@@ -1,11 +1,7 @@
 <template>
     <div class="main">
         <VPNav class="navbar" />
-        <GraphEditor
-            v-model="code"
-            :horizontal="height > width && width < 800"
-            class="main-content"
-        />
+        <GraphEditor v-model="code" :horizontal="height > width && width < 800" class="main-content" />
         <ClientOnly>
             <Teleport to="#copy-diagram-link">
                 <IconButton label="Copy link" icon="vpi-link" @click="copyLink" />
@@ -48,12 +44,9 @@ world:
   template: Microservice
   relations:
     - to: hello_rest
-      template: Calls`
+      template: Calls`;
 
-const code = useLocalStorage(
-    "code",
-    defaultCode
-);
+const code = useLocalStorage("code", defaultCode);
 // const diagram = ref<Root>();
 const copiedSuccess = ref(false);
 

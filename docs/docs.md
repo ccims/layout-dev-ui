@@ -6,68 +6,67 @@
 type RequestBody = Graph;
 
 interface Graph {
-    components: ComponentVersion[];
-    relations: Relation[];
+  components: ComponentVersion[];
+  relations: Relation[];
 }
 
 interface ComponentVersion extends Node {
-    name: string;
-    style: ShapeStyle;
-    template: string;
-    interfaces: Interface[];
+  name: string;
+  style: ShapeStyle;
+  template: string;
+  interfaces: Interface[];
+  size: Size;
 }
 
 interface Interface extends Node {
-    name: string;
-    style: ShapeStyle;
-    template: string;
-    size: { width: number; height: number };
-};
+  name: string;
+  style: ShapeStyle;
+  template: string;
+  size: Size;
+}
 
 interface Relation extends Node {
-    name: string;
-    start: string;
-    end: string;
-    style: RelationStyle;
-    template: string;
+  name: string;
+  start: string;
+  end: string;
+  style: RelationStyle;
+  template: string;
 }
 
 interface Node {
-    id: string;
+  id: string;
+}
+
+interface Size {
+  width: number;
+  height: number;
 }
 
 interface StrokeStyle {
-    stroke?: {
-        color?: string;
-        dash?: number[];
-    };
+  stroke?: {
+    color?: string;
+    dash?: number[];
+  };
 }
 
 interface FillStyle {
-    fill?: {
-        color: string;
-    };
+  fill?: {
+    color: string;
+  };
 }
 
 interface ShapeStyle extends StrokeStyle, FillStyle {
-    shape: Shape;
-    radius?: number;
+  shape: Shape;
+  radius?: number;
 }
 
 interface RelationStyle extends StrokeStyle {
-    marker: Marker;
+  marker: Marker;
 }
 
 type Shape = "RECT" | "CIRCLE" | "ELLIPSE" | "RHOMBUS" | "HEXAGON";
 
-type Marker =
-    | "ARROW"
-    | "DIAMOND"
-    | "FILLED_DIAMOND"
-    | "TRIANGLE"
-    | "FILLED_TRIANGLE"
-    | "CIRCLE"
-    | "FILLED_CIRCLE";
+type Marker = "ARROW" | "DIAMOND" | "FILLED_DIAMOND" | "TRIANGLE" | "FILLED_TRIANGLE" | "CIRCLE" | "FILLED_CIRCLE";
 ```
 
 ::: info
@@ -75,12 +74,18 @@ Note: this may be extended in the future to contain the size of components / int
 Further, the actual response body contains some additional fields which can be safely ignored.
 :::
 
-
-
 ## Expected Response Format
 
 ```ts
-type ResponseBody = GraphLayout;
+type ResponseBody =
+  | {
+      status: "success";
+      data: GraphLayout;
+    }
+  | {
+      status: "error";
+      message: string;
+    };
 
 interface GraphLayout {
   [id: string]: ElementLayout | RelationLayout;

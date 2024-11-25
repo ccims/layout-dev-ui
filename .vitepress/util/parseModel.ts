@@ -16,29 +16,27 @@ export function parseModel(model: string): Graph {
             template: component?.template ?? "Misc",
             issueTypes: [],
             contextMenu: "",
-            interfaces: Object.entries(component?.interfaces ?? {}).map(
-                ([key, iface]) => {
-                    relations.push(
-                        ...(iface.relations ?? []).map((relation) => ({
-                            id: `${key}-${relation.to}-${relationIdCounter++}`,
-                            name: "Unnamed",
-                            start: key,
-                            end: relation.to,
-                            style: relationStyles[relation.template ?? "General"] ?? relationStyles.General,
-                            template: relation.template ?? "General",
-                            contextMenu: "",
-                        }))
-                    );
-                    return {
-                        id: key,
-                        name: iface?.name,
-                        style: interfaceStyles[iface?.template ?? "REST"] ?? interfaceStyles.REST,
-                        template: iface?.template ?? "REST",
-                        issueTypes: [],
-                        contextMenu: "",
-                    };
-                }
-            ),
+            interfaces: Object.entries(component?.interfaces ?? {}).map(([key, iface]) => {
+                relations.push(
+                    ...(iface.relations ?? []).map((relation) => ({
+                        id: `${key}-${relation.to}-${relationIdCounter++}`,
+                        name: "Unnamed",
+                        start: key,
+                        end: relation.to,
+                        style: relationStyles[relation.template ?? "General"] ?? relationStyles.General,
+                        template: relation.template ?? "General",
+                        contextMenu: ""
+                    }))
+                );
+                return {
+                    id: key,
+                    name: iface?.name,
+                    style: interfaceStyles[iface?.template ?? "REST"] ?? interfaceStyles.REST,
+                    template: iface?.template ?? "REST",
+                    issueTypes: [],
+                    contextMenu: ""
+                };
+            })
         });
         relations.push(
             ...(component?.relations ?? []).map((relation) => ({
@@ -48,13 +46,13 @@ export function parseModel(model: string): Graph {
                 end: relation.to,
                 style: relationStyles[relation.template ?? "General"] ?? relationStyles.General,
                 template: relation.template ?? "General",
-                contextMenu: "",
+                contextMenu: ""
             }))
         );
     }
     return {
         components,
         relations,
-        issueRelations: [],
+        issueRelations: []
     };
 }

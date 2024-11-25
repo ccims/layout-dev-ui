@@ -7,7 +7,12 @@
                     <div ref="dialog" class="modal-container">
                         <p class="title">Diagrams</p>
                         <div class="diagram-list">
-                            <button v-for="[name] in Object.entries(diagrams)" :key="name" class="diagram-card" @click="openDiagram(name)">
+                            <button
+                                v-for="[name] in Object.entries(diagrams)"
+                                :key="name"
+                                class="diagram-card"
+                                @click="openDiagram(name)"
+                            >
                                 {{ name }}
                             </button>
                         </div>
@@ -27,7 +32,7 @@ const dialog = ref<HTMLElement | null>(null);
 
 const emit = defineEmits<{
     openDiagram: [value: string];
-}>()
+}>();
 
 onClickOutside(dialog, () => {
     showDialog.value = false;
@@ -36,20 +41,19 @@ onClickOutside(dialog, () => {
 const diagrams: Record<string, () => Promise<any>> = {
     "Hello world": () => import("../../diagrams/hello_world.yaml?raw"),
     "Webshop Except Sample": () => import("../../diagrams/webshop-excerpt-sample.yaml?raw"),
-    "TeaStore": () => import("../../diagrams/TeaStore.yaml?raw"),
+    TeaStore: () => import("../../diagrams/TeaStore.yaml?raw"),
     "Sock Shop": () => import("../../diagrams/Sock-Shop.yaml?raw"),
     "Train Ticket": () => import("../../diagrams/Train-Ticket.yaml?raw"),
-    "DeathStarBench": () => import("../../diagrams/DeathStarBench-complete.yaml?raw"),
+    DeathStarBench: () => import("../../diagrams/DeathStarBench-complete.yaml?raw"),
     "Online Boutique (expanded)": () => import("../../diagrams/Online-Boutique-expanded.yaml?raw"),
-    "Astronomy Shop": () => import("../../diagrams/Astronomy-Shop.yaml?raw"),
-}
+    "Astronomy Shop": () => import("../../diagrams/Astronomy-Shop.yaml?raw")
+};
 
 async function openDiagram(name: string) {
     const diagram = await diagrams[name]();
     emit("openDiagram", diagram.default);
     showDialog.value = false;
 }
-
 </script>
 <style scoped>
 .diagrams-button {

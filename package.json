@@ -7,7 +7,8 @@
     "scripts": {
         "dev": "vitepress dev",
         "build": "vitepress build",
-        "preview": "vitepress preview"
+        "preview": "vitepress preview",
+        "format": "prettier --write ."
     },
     "author": "",
     "devDependencies": {
@@ -15,6 +16,7 @@
         "@types/file-saver": "^2.0.7",
         "@types/pako": "^2.0.3",
         "@types/uuid": "^10.0.0",
+        "prettier": "^3.3.3",
         "vitepress": "^1.4.1",
         "vue": "^3.5.12"
     },
@@ -35,5 +37,22 @@
         "vscode-languageserver": "^9.0.1",
         "vscode-languageserver-protocol": "^3.17.5",
         "yaml": "^2.6.0"
+    },
+    "prettier": {
+        "tabWidth": 4,
+        "trailingComma": "none",
+        "printWidth": 120,
+        "overrides": [
+            {
+                "files": [
+                    "*.md",
+                    "*.yml",
+                    "*.yaml"
+                ],
+                "options": {
+                    "tabWidth": 2
+                }
+            }
+        ]
     }
 }

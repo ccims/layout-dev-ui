@@ -34,13 +34,10 @@ import {
     GraphLayout,
     GraphModelSource,
     SelectedElement,
-    ShapeGenerator,
+    ShapeGenerator
 } from "@gropius/graph-editor";
 import { onMounted } from "vue";
-import {
-    MonacoEditorLanguageClientWrapper,
-    UserConfig,
-} from "monaco-editor-wrapper";
+import { MonacoEditorLanguageClientWrapper, UserConfig } from "monaco-editor-wrapper";
 import { shallowRef } from "vue";
 import { inject } from "vue";
 import { Disposable } from "vscode-languageserver-protocol";
@@ -58,13 +55,13 @@ const id = uuid();
 defineProps({
     horizontal: {
         type: Boolean,
-        default: false,
-    },
+        default: false
+    }
 });
 
 const model = defineModel({
     type: String,
-    required: true,
+    required: true
 });
 
 const editorElement = ref<HTMLElement | null>(null);
@@ -80,25 +77,16 @@ watch(model, (value) => {
 
 const { isDark } = useData();
 
-const colorTheme = computed(() =>
-    isDark.value ? "Default Dark Modern" : "Default Light Modern"
-);
+const colorTheme = computed(() => (isDark.value ? "Default Dark Modern" : "Default Light Modern"));
 
 watch(isDark, () => {
-    updateUserConfiguration(
-        JSON.stringify({ "workbench.colorTheme": colorTheme.value })
-    );
+    updateUserConfiguration(JSON.stringify({ "workbench.colorTheme": colorTheme.value }));
 });
 
 class ModelSource extends GraphModelSource {
     protected navigateToElement(element: string): void {}
-    protected layoutUpdated(
-        partialUpdate: GraphLayout,
-        resultingLayout: GraphLayout
-    ): void {}
-    protected handleSelectionChanged(
-        selectedElements: SelectedElement<any>[]
-    ): void {}
+    protected layoutUpdated(partialUpdate: GraphLayout, resultingLayout: GraphLayout): void {}
+    protected handleSelectionChanged(selectedElements: SelectedElement<any>[]): void {}
     protected handleCreateRelation(context: CreateRelationContext): void {}
 }
 
@@ -131,10 +119,7 @@ const throttledParsedModel = refThrottled(parsedModel, 800, true, true);
 
 const shapeGenerator = new ShapeGenerator();
 
-function enhanceModel(
-    model: Graph,
-    sizes: Map<string, { width: number; height: number }>
-) {
+function enhanceModel(model: Graph, sizes: Map<string, { width: number; height: number }>) {
     for (const component of model.components) {
         enhanceModelElement(component, sizes, false);
         for (const inter of component.interfaces) {
@@ -153,7 +138,7 @@ function enhanceModelElement(
     if (isInterface) {
         size = {
             width: 40,
-            height: 40,
+            height: 40
         };
     } else {
         const nameSize = sizes.get(element.id + "-name");
@@ -161,13 +146,9 @@ function enhanceModelElement(
             width: nameSize?.width ?? 0,
             height: nameSize?.height ?? 0,
             x: 0,
-            y: 0,
+            y: 0
         };
-        size = shapeGenerator.generateForInnerBounds(
-            element.style.shape,
-            bounds,
-            element.style
-        ).bounds;
+        size = shapeGenerator.generateForInnerBounds(element.style.shape, bounds, element.style).bounds;
     }
 
     element["size"] = { width: size.width, height: size.height };
@@ -175,21 +156,11 @@ function enhanceModelElement(
 
 const layout = asyncComputed<GraphLayout>(async () => {
     const modelValue = throttledParsedModel.value;
-    if (
-        modelValue == undefined ||
-        layoutServerUrl.value == "" ||
-        modelSource.value == undefined
-    ) {
+    if (modelValue == undefined || layoutServerUrl.value == "" || modelSource.value == undefined) {
         return {};
     }
     const boundsRes = await modelSource.value.actionDispatcher.request(
-        RequestBoundsAction.create(
-            (modelSource.value as any).createRoot(
-                throttledParsedModel.value,
-                {},
-                true
-            )
-        )
+        RequestBoundsAction.create((modelSource.value as any).createRoot(throttledParsedModel.value, {}, true))
     );
     const sizesMap = new Map<string, { width: number; height: number }>();
     for (const bound of boundsRes.bounds) {
@@ -198,23 +169,19 @@ const layout = asyncComputed<GraphLayout>(async () => {
     const res = await fetch(layoutServerUrl.value, {
         method: "POST",
         headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "application/json"
         },
-        body: JSON.stringify(enhanceModel(toRaw(modelValue), sizesMap)),
+        body: JSON.stringify(enhanceModel(toRaw(modelValue), sizesMap))
     }).then((response) => response.json());
     return res.data;
 }, {});
 
 watchEffect(() => {
-    if (
-        layout.value != undefined &&
-        modelSource.value != undefined &&
-        throttledParsedModel.value != null
-    ) {
+    if (layout.value != undefined && modelSource.value != undefined && throttledParsedModel.value != null) {
         modelSource.value.updateGraph({
             graph: throttledParsedModel.value,
             layout: layout.value,
-            fitToBounds: true,
+            fitToBounds: true
         });
     }
 });
@@ -229,16 +196,16 @@ onMounted(async () => {
                 codeResources: {
                     main: {
                         text: model.value,
-                        uri: "graph.yaml",
-                    },
+                        uri: "graph.yaml"
+                    }
                 },
                 userConfiguration: {
                     json: JSON.stringify({
-                        "workbench.colorTheme": colorTheme.value,
-                    }),
-                },
-            },
-        },
+                        "workbench.colorTheme": colorTheme.value
+                    })
+                }
+            }
+        }
     };
 
     await wrapper.initAndStart(userConfig, editorElement.value!);
@@ -259,12 +226,12 @@ onMounted(async () => {
         modelSource.value!.updateGraph({
             graph: currentModel,
             layout: {},
-            fitToBounds: false,
+            fitToBounds: false
         });
         modelSource.value!.updateGraph({
             graph: currentModel,
             layout: {},
-            fitToBounds: true,
+            fitToBounds: true
         });
     }
 });

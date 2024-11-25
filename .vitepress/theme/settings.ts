@@ -11,7 +11,7 @@ export const settingsPlugin: Plugin = {
     install(app) {
         const settings = app.runWithContext(() => {
             return useLocalStorage<Partial<Settings>>("layoutDevUISettings", {});
-        })
+        });
         app.provide(settingsKey, settings);
     }
-}
+};

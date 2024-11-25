@@ -1,89 +1,85 @@
 import { ShapeStyle, RelationStyle } from "@gropius/graph-editor";
-import {
-    ComponentTemplate,
-    InterfaceTemplate,
-    RelationTemplate,
-} from "./model";
+import { ComponentTemplate, InterfaceTemplate, RelationTemplate } from "./model";
 
 export const componentStyles: Record<ComponentTemplate, ShapeStyle> = {
     Microservice: {
         shape: "HEXAGON",
-        stroke: {},
+        stroke: {}
     },
     Infrastructure: {
         shape: "RECT",
         radius: 5,
-        stroke: {},
+        stroke: {}
     },
     Database: {
         shape: "CIRCLE",
-        stroke: {},
+        stroke: {}
     },
     Frontend: {
         shape: "RECT",
-        stroke: {},
+        stroke: {}
     },
     Sidecar: {
         shape: "RHOMBUS",
-        stroke: {},
+        stroke: {}
     },
     Messaging: {
         shape: "RHOMBUS",
         radius: 5,
-        stroke: {},
+        stroke: {}
     },
     Library: {
         shape: "ELLIPSE",
-        stroke: {},
+        stroke: {}
     },
     Misc: {
         shape: "RECT",
-        stroke: {},
-    },
+        stroke: {}
+    }
 };
 
 export const interfaceStyles: Record<InterfaceTemplate, ShapeStyle> = {
     GraphQL: {
         shape: "HEXAGON",
-        stroke: {},
+        stroke: {}
     },
     REST: {
         shape: "CIRCLE",
-        stroke: {},
+        stroke: {}
     },
     gRPC: {
         shape: "RHOMBUS",
-        stroke: {},
+        stroke: {}
     },
     Messaging_Consumer: {
         shape: "RHOMBUS",
-        stroke: {},
-    },
+        stroke: {}
+    }
 };
 
 export const relationStyles: Record<RelationTemplate, RelationStyle> = {
     General: {
         marker: "ARROW",
-        stroke: {},
+        stroke: {}
     },
     Includes: {
         marker: "FILLED_CIRCLE",
-        stroke: {},
+        stroke: {}
     },
     Calls: {
         marker: "FILLED_TRIANGLE",
-        stroke: {},
+        stroke: {}
     },
     Hosted_On: {
         marker: "TRIANGLE",
-        stroke: {},
+        stroke: {}
     },
     Uses_Sidecar: {
         marker: "CIRCLE",
-        stroke: {},
+        stroke: {}
     },
     DB_Connection: {
         marker: "DIAMOND",
-        stroke: {},
-    },
+        stroke: {}
+    }
 };

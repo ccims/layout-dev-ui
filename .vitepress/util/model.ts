@@ -1,6 +1,14 @@
-export type ComponentTemplate = "Microservice" | "Infrastructure" | "Database" | "Frontend" | "Sidecar" | "Messaging" | "Library" | "Misc"
-export type InterfaceTemplate = "GraphQL" | "REST" | "gRPC" | "Messaging_Consumer"
-export type RelationTemplate = "General" | "Includes" | "Calls" | "Hosted_On" | "Uses_Sidecar" | "DB_Connection"
+export type ComponentTemplate =
+    | "Microservice"
+    | "Infrastructure"
+    | "Database"
+    | "Frontend"
+    | "Sidecar"
+    | "Messaging"
+    | "Library"
+    | "Misc";
+export type InterfaceTemplate = "GraphQL" | "REST" | "gRPC" | "Messaging_Consumer";
+export type RelationTemplate = "General" | "Includes" | "Calls" | "Hosted_On" | "Uses_Sidecar" | "DB_Connection";
 
 export interface Relation {
     to: string;

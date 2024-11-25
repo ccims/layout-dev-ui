@@ -37,13 +37,12 @@ onClickOutside(dialog, () => {
 });
 
 const names = {
-    serverUrl: "Layout server url",
+    serverUrl: "Layout server url"
 };
 
-const settings = inject(settingsKey)
+const settings = inject(settingsKey);
 
 const validState = ref(mapObject(names, () => true));
-
 </script>
 <style scoped>
 .settings-button {
