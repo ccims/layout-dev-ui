@@ -34,7 +34,7 @@ import {
     GraphLayout,
     GraphModelSource,
     SelectedElement,
-    ShapeGenerator
+    ShapeGenerator,
 } from "@gropius/graph-editor";
 import { onMounted } from "vue";
 import {
@@ -136,9 +136,9 @@ function enhanceModel(
     sizes: Map<string, { width: number; height: number }>
 ) {
     for (const component of model.components) {
-        enhanceModelElement(component, sizes);
+        enhanceModelElement(component, sizes, false);
         for (const inter of component.interfaces) {
-            enhanceModelElement(inter, sizes);
+            enhanceModelElement(inter, sizes, true);
         }
     }
     return model;
@@ -146,17 +146,31 @@ function enhanceModel(
 
 function enhanceModelElement(
     element: any,
-    sizes: Map<string, { width: number; height: number }>
+    sizes: Map<string, { width: number; height: number }>,
+    isInterface: boolean
 ) {
-    const size = sizes.get(element.id + "-name");
-    const bounds = {
-        width: size?.width ?? 0,
-        height: size?.height ?? 0,
-        x: 0,
-        y: 0,
+    let size: { width: number; height: number };
+    if (isInterface) {
+        size = {
+            width: 40,
+            height: 40,
+        };
+    } else {
+        const nameSize = sizes.get(element.id + "-name");
+        const bounds = {
+            width: nameSize?.width ?? 0,
+            height: nameSize?.height ?? 0,
+            x: 0,
+            y: 0,
+        };
+        size = shapeGenerator.generateForInnerBounds(
+            element.style.shape,
+            bounds,
+            element.style
+        ).bounds;
     }
-    const shapeSize = shapeGenerator.generateForInnerBounds(element.style.shape, bounds, element.style)
-    element["size"] = { width: shapeSize.bounds.width, height: shapeSize.bounds.height };
+
+    element["size"] = { width: size.width, height: size.height };
 }
 
 const layout = asyncComputed<GraphLayout>(async () => {
