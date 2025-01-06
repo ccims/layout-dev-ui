@@ -298,9 +298,10 @@ onBeforeUnmount(() => {
     position: absolute;
     top: 20px;
     right: 20px;
-    background-color: var(--vp-c-bg-elv);
+    background-color: var(--vp-c-bg-alt);
     color: var(--vp-c-neutral-7);
     white-space: preserve;
+    box-shadow: var(--vp-shadow-3);
 }
 </style>
 <style>
