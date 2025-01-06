@@ -8,10 +8,13 @@
                 <div ref="sprottyWrapper" class="sprotty-wrapper">
                     <div :id="`sprotty-container-${id}`"></div>
                     <div v-show="errorMessage != undefined" class="modal-mask">
-                        <div ref="dialog" class="modal-container">
+                        <div class="modal-container error">
                             <p class="title">Error</p>
                             <p>{{ errorMessage }}</p>
                         </div>
+                    </div>
+                    <div v-if="metadata" class="modal-container metadata">
+                        <p>{{ metadata }}</p>
                     </div>
                 </div>
             </Pane>
@@ -154,27 +157,33 @@ function enhanceModelElement(
     element["size"] = { width: size.width, height: size.height };
 }
 
-const layout = asyncComputed<GraphLayout>(async () => {
-    const modelValue = throttledParsedModel.value;
-    if (modelValue == undefined || layoutServerUrl.value == "" || modelSource.value == undefined) {
-        return {};
-    }
-    const boundsRes = await modelSource.value.actionDispatcher.request(
-        RequestBoundsAction.create((modelSource.value as any).createRoot(throttledParsedModel.value, {}, true))
-    );
-    const sizesMap = new Map<string, { width: number; height: number }>();
-    for (const bound of boundsRes.bounds) {
-        sizesMap.set(bound.elementId, bound.newSize);
-    }
-    const res = await fetch(layoutServerUrl.value, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(enhanceModel(toRaw(modelValue), sizesMap))
-    }).then((response) => response.json());
-    return res.data;
-}, {});
+const fetchResult = asyncComputed<{ data: GraphLayout; meta: any }>(
+    async () => {
+        const modelValue = throttledParsedModel.value;
+        if (modelValue == undefined || layoutServerUrl.value == "" || modelSource.value == undefined) {
+            return {};
+        }
+        const boundsRes = await modelSource.value.actionDispatcher.request(
+            RequestBoundsAction.create((modelSource.value as any).createRoot(throttledParsedModel.value, {}, true))
+        );
+        const sizesMap = new Map<string, { width: number; height: number }>();
+        for (const bound of boundsRes.bounds) {
+            sizesMap.set(bound.elementId, bound.newSize);
+        }
+        const res = await fetch(layoutServerUrl.value, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(enhanceModel(toRaw(modelValue), sizesMap))
+        }).then((response) => response.json());
+        return res;
+    },
+    { data: {}, meta: undefined }
+);
+
+const layout = computed(() => fetchResult.value.data);
+const metadata = computed(() => JSON.stringify(fetchResult.value.meta, null, 4));
 
 watchEffect(() => {
     if (layout.value != undefined && modelSource.value != undefined && throttledParsedModel.value != null) {
@@ -272,14 +281,26 @@ onBeforeUnmount(() => {
 }
 
 .modal-container {
-    width: min(calc(100% - 40px), 400px);
-    margin: auto;
     padding: 30px;
     padding-top: 25px;
-    background-color: var(--vp-c-danger-3);
-    color: var(--vp-c-neutral);
     border-radius: 12px;
     transition: all 0.3s ease;
+}
+
+.modal-container.error {
+    width: min(calc(100% - 40px), 400px);
+    margin: auto;
+    background-color: var(--vp-c-danger-3);
+    color: var(--vp-c-neutral);
+}
+
+.modal-container.metadata {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: var(--vp-c-bg-elv);
+    color: var(--vp-c-neutral-7);
+    white-space: preserve;
 }
 </style>
 <style>

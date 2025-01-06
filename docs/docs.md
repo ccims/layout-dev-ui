@@ -81,6 +81,7 @@ type ResponseBody =
   | {
       status: "success";
       data: GraphLayout;
+      meta?: any;
     }
   | {
       status: "error";
