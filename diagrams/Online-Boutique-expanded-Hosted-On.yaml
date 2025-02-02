@@ -1,0 +1,102 @@
+Frontend:
+  name: Frontend
+  template: Frontend
+  relations:
+    - to: Kubernetes
+      template: Hosted on
+
+APIGateway:
+  name: API Gateway
+  template: Misc
+  relations:
+    - to: Kubernetes
+      template: Hosted on
+
+ProductCatalog:
+  name: Product Catalog Service
+  template: Microservice
+  relations:
+    - to: Kubernetes
+      template: Hosted on
+
+Cart:
+  name: Cart Service
+  template: Microservice
+  relations:
+    - to: Kubernetes
+      template: Hosted on
+
+Checkout:
+  name: Checkout Service
+  template: Microservice
+  relations:
+    - to: Kubernetes
+      template: Hosted on
+
+Payment:
+  name: Payment Service
+  template: Microservice
+  relations:
+    - to: Kubernetes
+      template: Hosted on
+
+Shipping:
+  name: Shipping Service
+  template: Microservice
+  relations:
+    - to: Kubernetes
+      template: Hosted on
+
+Recommendation:
+  name: Recommendation Service
+  template: Microservice
+  relations:
+    - to: Kubernetes
+      template: Hosted on
+
+Email:
+  name: Email Service
+  template: Microservice
+  relations:
+    - to: Kubernetes
+      template: Hosted on
+
+UserAuth:
+  name: User Authentication Service
+  template: Microservice
+  relations:
+    - to: Kubernetes
+      template: Hosted on
+
+Inventory:
+  name: Inventory Management Service
+  template: Microservice
+  relations:
+    - to: Kubernetes
+      template: Hosted on
+
+Review:
+  name: Review Service
+  template: Microservice
+  relations:
+    - to: Kubernetes
+      template: Hosted on
+
+OrderHistory:
+  name: Order History Service
+  template: Microservice
+  relations:
+    - to: Kubernetes
+      template: Hosted on
+
+Analytics:
+  name: Analytics Service
+  template: Microservice
+  relations:
+    - to: Kubernetes
+      template: Hosted on
+
+Kubernetes:
+  name: Kubernetes
+  template: Infrastructure
+

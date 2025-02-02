@@ -1,0 +1,94 @@
+Catalog:
+  name: Catalog Service
+  template: Microservice
+  relations:
+    - to: SpringBoot
+      template: Includes
+    - to: MongoDBDriver
+      template: Includes
+    - to: Jackson
+      template: Includes
+    - to: SLF4J
+      template: Includes
+    - to: Logback
+      template: Includes
+
+Orders:
+  name: Order Service
+  template: Microservice
+  relations:
+    - to: SpringBoot
+      template: Includes
+    - to: MySQLConnectorJ
+      template: Includes
+    - to: Jackson
+      template: Includes
+    - to: SLF4J
+      template: Includes
+    - to: Logback
+      template: Includes
+
+Users:
+  name: User Service
+  template: Microservice
+  relations:
+    - to: SpringBoot
+      template: Includes
+    - to: MongoDBDriver
+      template: Includes
+    - to: Jackson
+      template: Includes
+    - to: SLF4J
+      template: Includes
+    - to: Logback
+      template: Includes
+
+Payment:
+  name: Payment Service
+  template: Microservice
+  relations:
+    - to: SpringBoot
+      template: Includes
+    - to: Jackson
+      template: Includes
+    - to: SLF4J
+      template: Includes
+    - to: Logback
+      template: Includes
+
+Shipping:
+  interfaces:
+  template: Microservice
+  relations:
+    - to: SpringBoot
+      template: Includes
+    - to: Jackson
+      template: Includes
+    - to: SLF4J
+      template: Includes
+    - to: Logback
+      template: Includes
+
+SpringBoot:
+  name: Spring Boot
+  template: Library
+
+MongoDBDriver:
+  name: MongoDB Java Driver
+  template: Library
+
+MySQLConnectorJ:
+  name: MySQL Connector/J
+  template: Library
+
+Jackson:
+  name: Jackson
+  template: Library
+
+SLF4J:
+  name: SLF4J
+  template: Library
+
+Logback:
+  name: Logback
+  template: Library

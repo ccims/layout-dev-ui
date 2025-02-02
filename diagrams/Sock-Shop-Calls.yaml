@@ -1,0 +1,93 @@
+Frontend:
+  name: Frontend
+  template: Frontend
+  interfaces:
+    frontend_REST:
+      name: REST
+      template: REST
+  relations:
+    - to: APIGateway
+      template: Calls
+
+APIGateway:
+  name: API Gateway
+  template: Microservice
+  relations:
+    - to: Frontend
+      template: Calls
+    - to: catalog_REST
+      template: Calls
+    - to: orders_REST
+      template: Calls
+    - to: users_REST
+      template: Calls
+    - to: payment_REST
+      template: Calls
+    - to: shipping_REST
+      template: Calls
+
+Catalog:
+  name: Catalog Service
+  template: Microservice
+  interfaces:
+    catalog_REST:
+      name: REST
+      template: REST
+  relations:
+    - to: CatalogDB
+      template: DB connection
+
+CatalogDB:
+  name: CatalogDB
+  template: Database
+
+Orders:
+  name: Order Service
+  template: Microservice
+  interfaces:
+    orders_REST:
+      name: REST
+      template: REST
+  relations:
+    - to: OrdersDB
+      template: DB connection
+    - to: shipping_REST
+      template: Calls
+
+OrdersDB:
+  name: OrdersDB
+  template: Database
+
+Users:
+  name: User Service
+  template: Microservice
+  interfaces:
+    users_REST:
+      name: REST
+      template: REST
+  relations:
+    - to: UsersDB
+      template: DB connection
+
+UsersDB:
+  name: UsersDB
+  template: Database
+
+Payment:
+  name: Payment Service
+  template: Microservice
+  interfaces:
+    payment_REST:
+      name: REST
+      template: REST
+
+Shipping:
+  name: Shipping Service
+  template: Microservice
+  interfaces:
+    shipping_REST:
+      name: REST
+      template: REST
+  relations:
+    - to: orders_REST
+      template: Calls

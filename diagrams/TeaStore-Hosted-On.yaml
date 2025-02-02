@@ -1,0 +1,38 @@
+WebUI:
+  name: WebUI Service
+  template: Microservice
+  relations:
+    - to: Kubernetes
+      template: Hosted on
+
+Auth:
+  name: Auth Service
+  template: Microservice
+  relations:
+    - to: Kubernetes
+      template: Hosted on
+
+Persistence:
+  name: Persistence Service
+  template: Microservice
+  relations:
+    - to: Kubernetes
+      template: Hosted on
+
+Recommender:
+  name: Recommender Service
+  template: Microservice
+  relations:
+    - to: Kubernetes
+      template: Hosted on
+
+Image:
+  name: Image Service
+  template: Microservice
+  relations:
+    - to: Kubernetes
+      template: Hosted on
+
+Kubernetes:
+  name: Kubernetes
+  template: Infrastructure
