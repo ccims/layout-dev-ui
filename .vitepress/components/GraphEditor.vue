@@ -52,6 +52,7 @@ import { updateUserConfiguration } from "@codingame/monaco-vscode-configuration-
 import { parseModel } from "../util/parseModel";
 import { settingsKey } from "../theme/settings";
 import { validateModel } from "../util/validateModel";
+import {receive} from "../util/viewChanger";
 
 const id = uuid();
 
@@ -67,12 +68,15 @@ const model = defineModel({
     required: true
 });
 
+let currentModelSource: string = ""
+let currentView: string = "Default"
 const editorElement = ref<HTMLElement | null>(null);
 const sprottyWrapper = ref<HTMLElement | null>(null);
 const disposables = shallowRef<Disposable[]>([]);
 const hideMainContent = ref(true);
 
 watch(model, (value) => {
+    currentModelSource = value;
     if (editor.value != undefined && editor.value.getValue() != value) {
         editor.value.setValue(value);
     }
@@ -104,7 +108,7 @@ const errorMessage = ref<string | null>(null);
 
 watchImmediate(model, (value) => {
     try {
-        const parsed = parseModel(value);
+        const parsed = parseModel(value, currentView);
         validateModel(parsed);
         parsedModel.value = parsed;
         errorMessage.value = null;
@@ -196,6 +200,11 @@ watchEffect(() => {
 });
 
 onMounted(async () => {
+    receive('view', (changedView: string) => {
+      currentView = changedView;
+      // Small workaround, so that the model is parsed again for the new view.
+      model.value = currentModelSource.concat(' ');
+    });
     const wrapper = new MonacoEditorLanguageClientWrapper();
     disposables.value.push(wrapper);
     const userConfig: UserConfig = {
@@ -220,6 +229,7 @@ onMounted(async () => {
     await wrapper.initAndStart(userConfig, editorElement.value!);
     const monacoEditor = wrapper.getEditor()!;
     editor.value = monacoEditor;
+    currentModelSource = monacoEditor.getValue();
     monacoEditor.onDidChangeModelContent(() => {
         model.value = monacoEditor.getValue();
     });

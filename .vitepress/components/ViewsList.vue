@@ -10,6 +10,7 @@
               <button
                   v-for="[name] in Object.entries(views)"
                   :key="name"
+                  :class="{ 'highlighted': name === currentView }"
                   class="views-card"
                   @click="changeView(name)"
               >
@@ -26,33 +27,27 @@
 import {ref, shallowRef} from "vue";
 import IconButton from "./IconButton.vue";
 import { onClickOutside } from "@vueuse/core";
+import {emit} from "../util/viewChanger";
 
+let currentView = "Default";
 const showDialog = ref(false);
 const dialog = ref<HTMLElement | null>(null);
-
-const emit = defineEmits<{
-  changeView: [value: string];
-}>();
 
 onClickOutside(dialog, () => {
   showDialog.value = false;
 });
 
 const views: Record<string, () => Promise<any>> = {
-  "Sock Shop Default": () => import("../../diagrams/Sock-Shop.yaml?raw"),
-  "Sock Shop Hosted-On": () => import("../../diagrams/Sock-Shop-Hosted-On.yaml?raw"),
-  "Sock Shop Includes": () => import("../../diagrams/Sock-Shop-Includes.yaml?raw"),
-  "Sock Shop Calls and Database": () => import("../../diagrams/Sock-Shop-Calls.yaml?raw"),
-  "Tea Store Default": () => import("../../diagrams/TeaStore.yaml?raw"),
-  "Tea Store Hosted-On": () => import("../../diagrams/TeaStore-Hosted-On.yaml?raw"),
-  "Tea Store Includes": () => import("../../diagrams/TeaStore-Includes.yaml?raw"),
-  "Tea Store Calls and Database": () => import("../../diagrams/TeaStore-Calls.yaml?raw"),
+  "Default": async () => ({ default: "Default" }),
+  "Hosted on": async () => ({ default: "Hosted on" }),
+  "Includes": async () => ({ default: "Includes" }),
+  "Calls": async () => ({ default: "Calls" }),
 };
 
 async function changeView(name: string) {
-  const view = await views[name]();
-  emit("changeView", view.default);
   showDialog.value = false;
+  currentView = name;
+  emit('view', name);
 }
 </script>
 <style scoped>
@@ -123,5 +118,9 @@ async function changeView(name: string) {
 .modal-enter-from .modal-container,
 .modal-leave-to .modal-container {
   transform: scale(1.1);
+}
+
+.highlighted {
+  background: var(--vp-c-important-1);
 }
 </style>
