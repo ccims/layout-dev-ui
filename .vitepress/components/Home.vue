@@ -10,7 +10,7 @@
             <Teleport to="#export-diagram">
                 <IconButton label="Download source" icon="vpi-download" @click="downloadSource" />
             </Teleport>
-            <Teleport to ="#views-list">
+            <Teleport to="#views-list">
                 <ViewsList v-model="view" />
             </Teleport>
             <Teleport to="#diagram-list">

@@ -5,9 +5,9 @@ import { componentStyles, interfaceStyles, relationStyles } from "./styles";
 
 const DEFAULT = "Default";
 const INCLUDES = "Includes";
-const HOSTED_ON = "Hosted_On";
+const HOSTED_ON = "Hosted on";
 const CALLS = "Calls";
-const DB_CONNECTION = "DB_Connection";
+const DB_CONNECTION = "DB connection";
 
 export function parseModel(model: string, view: string = DEFAULT): Graph {
     const parsedModel = parse(model) as Model;
