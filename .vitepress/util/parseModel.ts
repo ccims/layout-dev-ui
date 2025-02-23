@@ -1,13 +1,13 @@
-import {Graph} from "@gropius/graph-editor";
-import {parse} from "yaml";
-import {Model} from "./model";
-import {componentStyles, interfaceStyles, relationStyles} from "./styles";
+import { Graph } from "@gropius/graph-editor";
+import { parse } from "yaml";
+import { Model } from "./model";
+import { componentStyles, interfaceStyles, relationStyles } from "./styles";
 
-const DEFAULT = "Default"
-const INCLUDES = "Includes"
-const HOSTED_ON = "Hosted on"
-const CALLS = "Calls"
-const DB_CONNECTION = "DB connection"
+const DEFAULT = "Default";
+const INCLUDES = "Includes";
+const HOSTED_ON = "Hosted_On";
+const CALLS = "Calls";
+const DB_CONNECTION = "DB_Connection";
 
 export function parseModel(model: string, view: string = DEFAULT): Graph {
     const parsedModel = parse(model) as Model;
@@ -44,13 +44,15 @@ export function parseModel(model: string, view: string = DEFAULT): Graph {
                 filteredRelations = allRelations;
                 break;
             case INCLUDES:
-                filteredRelations = allRelations.filter(rel => rel.template === INCLUDES);
+                filteredRelations = allRelations.filter((rel) => rel.template === INCLUDES);
                 break;
             case HOSTED_ON:
-                filteredRelations = allRelations.filter(rel => rel.template === HOSTED_ON);
+                filteredRelations = allRelations.filter((rel) => rel.template === HOSTED_ON);
                 break;
-            case "Calls":
-                filteredRelations = allRelations.filter(rel => rel.template === DB_CONNECTION || rel.template === CALLS);
+            case CALLS:
+                filteredRelations = allRelations.filter(
+                    (rel) => rel.template === DB_CONNECTION || rel.template === CALLS
+                );
                 break;
         }
 
@@ -61,14 +63,17 @@ export function parseModel(model: string, view: string = DEFAULT): Graph {
             template: component?.template ?? "Misc",
             issueTypes: [],
             contextMenu: "",
-            interfaces: view === INCLUDES || view === HOSTED_ON ? [] : Object.entries(component?.interfaces ?? {}).map(([iKey, iface]) => ({
-                id: iKey,
-                name: iface?.name,
-                style: interfaceStyles[iface?.template ?? "REST"] ?? interfaceStyles.REST,
-                template: iface?.template ?? "REST",
-                issueTypes: [],
-                contextMenu: ""
-            }))
+            interfaces:
+                view === INCLUDES || view === HOSTED_ON
+                    ? []
+                    : Object.entries(component?.interfaces ?? {}).map(([iKey, iface]) => ({
+                          id: iKey,
+                          name: iface?.name,
+                          style: interfaceStyles[iface?.template ?? "REST"] ?? interfaceStyles.REST,
+                          template: iface?.template ?? "REST",
+                          issueTypes: [],
+                          contextMenu: ""
+                      }))
         });
         relations.push(...filteredRelations);
     }
@@ -80,7 +85,11 @@ export function parseModel(model: string, view: string = DEFAULT): Graph {
             componentIdsWithRelations.add(relation.end);
         }
 
-        const filteredComponents = components.filter(component => componentIdsWithRelations.has(component.id) || component.interfaces.some(iface => componentIdsWithRelations.has(iface.id)));
+        const filteredComponents = components.filter(
+            (component) =>
+                componentIdsWithRelations.has(component.id) ||
+                component.interfaces.some((iface) => componentIdsWithRelations.has(iface.id))
+        );
         components.length = 0;
         components.push(...filteredComponents);
     }

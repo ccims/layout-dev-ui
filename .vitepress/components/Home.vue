@@ -1,7 +1,7 @@
 <template>
     <div class="main">
         <VPNav class="navbar" />
-        <GraphEditor v-model="code" :horizontal="height > width && width < 800" class="main-content" />
+        <GraphEditor v-model="code" :view="view" :horizontal="height > width && width < 800" class="main-content" />
         <ClientOnly>
             <Teleport to="#copy-diagram-link">
                 <IconButton label="Copy link" icon="vpi-link" @click="copyLink" />
@@ -11,7 +11,7 @@
                 <IconButton label="Download source" icon="vpi-download" @click="downloadSource" />
             </Teleport>
             <Teleport to ="#views-list">
-                <ViewsList @change-view="code = $event" />
+                <ViewsList v-model="view" />
             </Teleport>
             <Teleport to="#diagram-list">
                 <DiagramList @open-diagram="code = $event" />
@@ -30,6 +30,7 @@ import { serialize, deserialize } from "../util/serialization.js";
 import { onBeforeMount } from "vue";
 import DiagramList from "./DiagramList.vue";
 import ViewsList from "./ViewsList.vue";
+import { View } from "../util/view";
 
 const GraphEditor = defineClientComponent(() => import("./GraphEditor.vue"));
 
@@ -51,7 +52,7 @@ world:
       template: Calls`;
 
 const code = useLocalStorage("code", defaultCode);
-// const diagram = ref<Root>();
+const view = ref(View.Default);
 const copiedSuccess = ref(false);
 
 onKeyStroke("s", (event) => {
