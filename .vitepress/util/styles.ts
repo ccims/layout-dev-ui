@@ -70,15 +70,15 @@ export const relationStyles: Record<RelationTemplate, RelationStyle> = {
         marker: "FILLED_TRIANGLE",
         stroke: {}
     },
-    Hosted_On: {
+    "Hosted on": {
         marker: "TRIANGLE",
         stroke: {}
     },
-    Uses_Sidecar: {
+    "Uses sidecar": {
         marker: "CIRCLE",
         stroke: {}
     },
-    DB_Connection: {
+    "DB connection": {
         marker: "DIAMOND",
         stroke: {}
     }

@@ -26,7 +26,7 @@ import "reflect-metadata";
 // @ts-ignore
 import { Splitpanes, Pane } from "splitpanes";
 import "splitpanes/dist/splitpanes.css";
-import { ref, onBeforeUnmount, watch, computed, toRaw, watchEffect } from "vue";
+import { ref, onBeforeUnmount, watch, computed, toRaw, watchEffect, PropType } from "vue";
 import { TYPES } from "sprotty";
 import { RequestBoundsAction } from "sprotty-protocol";
 
@@ -52,13 +52,18 @@ import { updateUserConfiguration } from "@codingame/monaco-vscode-configuration-
 import { parseModel } from "../util/parseModel";
 import { settingsKey } from "../theme/settings";
 import { validateModel } from "../util/validateModel";
+import { View } from "../util/view";
 
 const id = uuid();
 
-defineProps({
+const props = defineProps({
     horizontal: {
         type: Boolean,
         default: false
+    },
+    view: {
+        type: String as PropType<View>,
+        required: true
     }
 });
 
@@ -99,20 +104,19 @@ const editor = shallowRef<{
 }>();
 const modelSource = shallowRef<ModelSource | undefined>();
 
-const parsedModel = ref<Graph>();
-const errorMessage = ref<string | null>(null);
-
-watchImmediate(model, (value) => {
+const state = computed(() => {
     try {
-        const parsed = parseModel(value);
-        validateModel(parsed);
-        parsedModel.value = parsed;
-        errorMessage.value = null;
+        const parsedModel = parseModel(model.value, props.view);
+        validateModel(parsedModel);
+        return { parsedModel, errorMessage: null };
     } catch (e) {
         console.error(e);
-        errorMessage.value = (e as any).message;
+        return { parsedModel: undefined, errorMessage: (e as any).message };
     }
 });
+
+const parsedModel = computed(() => state.value.parsedModel);
+const errorMessage = computed(() => state.value.errorMessage);
 
 const settings = inject(settingsKey);
 

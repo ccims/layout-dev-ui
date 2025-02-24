@@ -8,7 +8,7 @@ export type ComponentTemplate =
     | "Library"
     | "Misc";
 export type InterfaceTemplate = "GraphQL" | "REST" | "gRPC" | "Messaging_Consumer";
-export type RelationTemplate = "General" | "Includes" | "Calls" | "Hosted_On" | "Uses_Sidecar" | "DB_Connection";
+export type RelationTemplate = "General" | "Includes" | "Calls" | "Hosted on" | "Uses sidecar" | "DB connection";
 
 export interface Relation {
     to: string;
