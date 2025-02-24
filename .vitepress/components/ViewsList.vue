@@ -12,7 +12,7 @@
                                 :key="name"
                                 :class="{ highlighted: name === model }"
                                 class="views-card"
-                                @click="model = name"
+                                @click="model = name; showDialog = false"
                             >
                                 {{ name }}
                             </button>
