@@ -1,0 +1,699 @@
+Infrastructure:
+  template: Infrastructure
+RUSTGraphQLLibrary:
+  template: Library
+KotlinGraphQLLibrary:
+  template: Library
+NodeJsGraphQLLibrary:
+  template: Library
+keycloakJS:
+  template: Library
+mongoNestJSLibrary:
+  template: Library
+Frontend:
+  template: Frontend
+  interfaces:
+    Frontend_GraphQL_Required:
+      template: GraphQL_Required
+      relations:
+        - to: Gateway_GraphQL_Provided
+          template: Calls
+      name: ""
+    Frontend_OAUTH_Required:
+      template: OAUTH_Required
+      relations:
+        - to: Keycloak_OAUTH
+          template: Calls
+      name: ""
+  relations:
+    - to: Infrastructure        
+      template: Hosted_on 
+    - to: keycloakJS
+      template: Includes
+Gateway:  
+  template: Microservice  
+  interfaces: 
+    Gateway_GraphQL_Provided: 
+      template: GraphQL_Provided   
+      name: ""
+    Gateway_GraphQL_Required:         
+      template: GraphQL_Required
+      relations:
+        - to: User_GraphQL_Provided_Gateway
+          template: Calls
+        - to: Address_GraphQL_Provided_Gateway
+          template: Calls
+        - to: Invoice_GraphQL_Provided_Gateway
+          template: Calls
+        - to: Discount_GraphQL_Provided_Gateway
+          template: Calls
+        - to: Wishlist_GraphQL_Provided_Gateway
+          template: Calls
+        - to: ShoppingCart_GraphQL_Provided_Gateway
+          template: Calls
+        - to: Return_GraphQL_Provided_Gateway
+          template: Calls
+        - to: Review_GraphQL_Provided_Gateway
+          template: Calls
+        - to: Catalog_GraphQL_Provided_Gateway
+          template: Calls
+        - to: Shipment_GraphQL_Provided_Gateway
+          template: Calls
+        - to: Payment_GraphQL_Provided_Gateway
+          template: Calls
+        - to: Order_GraphQL_Provided_Gateway
+          template: Calls
+        - to: Inventory_GraphQL_Provided_Gateway
+          template: Calls
+        - to: Tax_GraphQL_Provided_Gateway
+          template: Calls
+        - to: Media_GraphQL_Provided_Gateway
+          template: Calls
+      name: ""
+    Gateway_OAUTH_Required:
+      template: OAUTH_Required
+      relations:
+        - to: Keycloak_OAUTH
+          template: Calls
+      name: ""
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+Notification:
+  template: Microservice
+  interfaces:
+    Notification_notification/notification/create:
+      template: Messaging_Subscribe
+      name: ""
+    Notification_user/user/created:
+      template: Messaging_Subscribe
+      name: ""
+    Notification_GraphQL_Provided_Gateway:
+      template: GraphQL_Provided
+      name: ""
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+    - to: KotlinGraphQLLibrary
+      template: Includes
+Keycloak:
+  template: Microservice
+  interfaces:
+    Keycloak_user/user/create:
+      template: Messaging_Publish
+      name: ""
+    Keycloak_OAUTH:
+      template: OAUTH_Provided
+      name: ""
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+User:
+  template: Microservice
+  interfaces:
+    User_user/user/create:
+      template: Messaging_Subscribe
+      relations:
+        - to: Keycloak_user/user/create
+          template: Event
+      name: ""
+    User_user/user/created:
+      template: Messaging_Publish
+      name: ""
+    User_GraphQL_Provided_Gateway:
+      template: GraphQL_Provided
+      name: ""
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+    - to: KotlinGraphQLLibrary
+      template: Includes
+Address:
+  template: Microservice
+  interfaces:
+    Address_user/user/created:
+      template: Messaging_Subscribe
+      relations:
+        - to: User_user/user/created
+          template: Event
+      name: ""
+    Address_address/user-address/created:
+      template: Messaging_Publish
+      name: ""
+    Address_address/vendor-address/created:
+      template: Messaging_Publish
+      name: ""
+    Address_address/user-address/archived:
+      template: Messaging_Publish
+      name: ""
+    Address_GraphQL_Provided_Gateway:
+      template: GraphQL_Provided
+      name: ""
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+    - to: KotlinGraphQLLibrary
+      template: Includes
+Invoice:
+  template: Microservice
+  interfaces:
+    Invoice_discount/order/validation-succeeded:
+      template: Messaging_Subscribe
+      relations:
+        - to: Discount_discount/order/validation-succeeded
+          template: Event
+      name: ""
+    Invoice_address/vendor-address/created:
+      template: Messaging_Subscribe
+      relations:
+        - to: Address_address/vendor-address/created
+          template: Event
+      name: ""
+    Invoice_address/user-address/created:
+      template: Messaging_Subscribe
+      relations:
+        - to: Address_address/user-address/created
+          template: Event
+      name: ""
+    Invoice_address/user-address/archived:
+      template: Messaging_Subscribe
+      relations:
+        - to: Address_address/user-address/archived
+          template: Event
+      name: ""
+    Invoice_user/user/created:
+      template: Messaging_Subscribe
+      relations:
+        - to: User_user/user/created
+          template: Event
+      name: ""
+    Invoice_invoice/invoice/created:
+      template: Messaging_Publish
+      name: ""
+    Invoice_GraphQL_Provided_Gateway:
+      template: GraphQL_Provided
+      name: ""
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+    - to: RUSTGraphQLLibrary
+      template: Includes
+Discount:
+  template: Microservice
+  interfaces:
+    Discount_inventory/product-item/reservation-succeeded:
+      template: Messaging_Subscribe
+      relations:
+        - to: Inventory_inventory/product-item/reservation-succeeded
+          template: Event
+      name: ""
+    Discount_user/user/created:
+      template: Messaging_Subscribe
+      relations:
+        - to: User_user/user/created
+          template: Event
+      name: ""
+    Discount_catalog/category/created:
+      template: Messaging_Subscribe
+      relations:
+        - to: Catalog_catalog/category/created
+          template: Event
+      name: ""
+    Discount_catalog/product/created:
+      template: Messaging_Subscribe
+      relations:
+        - to: Catalog_catalog/product/created
+          template: Event
+      name: ""
+    Discount_catalog/product-variant/created:
+      template: Messaging_Subscribe
+      relations:
+        - to: Catalog_catalog/product-variant/created
+          template: Event
+      name: ""
+    Discount_discount/discount/created:
+      template: Messaging_Publish
+      name: ""
+    Discount_discount/discount/updated:
+      template: Messaging_Publish
+      name: ""
+    Discount_discount/coupon/created:
+      template: Messaging_Publish
+      name: ""
+    Discount_discount/coupon/updated:
+      template: Messaging_Publish
+      name: ""
+    Discount_discount/order/validation-succeeded:
+      template: Messaging_Publish
+      name: ""
+    Discount_discount/order/validation-failed:
+      template: Messaging_Publish
+      name: ""
+    Discount_GraphQL_Provided:
+      template: GraphQL_Provided
+      name: ""
+    Discount_GraphQL_Provided_Gateway:
+      template: GraphQL_Provided
+      name: ""
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+    - to: KotlinGraphQLLibrary
+      template: Includes
+Wishlist:
+  template: Microservice
+  interfaces:
+    Wishlist_user/user/created:
+      template: Messaging_Subscribe
+      relations:
+        - to: User_user/user/created
+          template: Event
+      name: ""
+    Wishlist_catalog/product-variant/created:
+      template: Messaging_Subscribe
+      relations:
+        - to: Catalog_catalog/product-variant/created
+          template: Event
+      name: ""
+    Wishlist_GraphQL_Provided_Gateway:
+      template: GraphQL_Provided
+      name: ""
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+    - to: RUSTGraphQLLibrary
+      template: Includes
+ShoppingCart:
+  template: Microservice
+  interfaces:
+    ShoppingCart_user/user/created:
+      template: Messaging_Subscribe
+      relations:
+        - to: User_user/user/created
+          template: Event
+      name: ""
+    ShoppingCart_catalog/product-variant/created:
+      template: Messaging_Subscribe
+      relations:
+        - to: Catalog_catalog/product-variant/created
+          template: Event
+      name: ""
+    ShoppingCart_order/order/created:
+      template: Messaging_Subscribe
+      relations:
+        - to: Order_order/order/created
+          template: Event
+      name: ""
+    ShoppingCart_GraphQL_Provided_Gateway:
+      template: GraphQL_Provided
+      name: ""
+    ShoppingCart_GraphQL_Provided:
+      template: GraphQL_Provided
+      name: ""
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+    - to: RUSTGraphQLLibrary
+      template: Includes
+Return:
+  template: Microservice
+  interfaces:
+    Return_shipment/shipment/created:
+      template: Messaging_Subscribe
+      relations:
+        - to: Shipment_shipment/shipment/created
+          template: Event
+      name: ""
+    Return_shipment/shipment/status-updated:
+      template: Messaging_Subscribe
+      relations:
+        - to: Shipment_shipment/shipment/status-updated
+          template: Event
+      name: ""
+    Return_order/order/created:
+      template: Messaging_Subscribe
+      relations:
+        - to: Order_order/order/created
+          template: Event
+      name: ""
+    Return_catalog/product-variant-version/created:
+      template: Messaging_Subscribe
+      relations:
+        - to: Catalog_catalog/product-variant-version/created
+          template: Event
+      name: ""
+    Return_return/return/created:
+      template: Messaging_Publish
+      name: ""
+    Return_GraphQL_Provided_Gateway:
+      template: GraphQL_Provided
+      name: ""
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+    - to: KotlinGraphQLLibrary
+      template: Includes
+Review:
+  template: Microservice
+  interfaces:
+    Review_user/user/created:
+      template: Messaging_Subscribe
+      relations:
+        - to: User_user/user/created
+          template: Event
+      name: ""
+    Review_catalog/product-variant/created:
+      template: Messaging_Subscribe
+      relations:
+        - to: Catalog_catalog/product-variant/created
+          template: Event
+      name: ""
+    Review_GraphQL_Provided_Gateway:
+      template: GraphQL_Provided
+      name: ""
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+    - to: RUSTGraphQLLibrary
+      template: Includes
+Catalog:
+  template: Microservice
+  interfaces:
+    Catalog_tax/tax-rate/created:
+      template: Messaging_Subscribe
+      relations:
+        - to: Tax_tax/tax-rate/created
+          template: Event
+      name: ""
+    Catalog_media/media/created:
+      template: Messaging_Subscribe
+      relations:
+        - to: Media_media/media/created
+          template: Event
+      name: ""
+    Catalog_catalog/product/created:
+      template: Messaging_Publish
+      name: ""
+    Catalog_catalog/product-variant/created:
+      template: Messaging_Publish
+      name: ""
+    Catalog_catalog/product-variant-version/created:
+      template: Messaging_Publish
+      name: ""
+    Catalog_catalog/category/created:
+      template: Messaging_Publish
+      name: ""
+    Catalog_catalog/product/updated:
+      template: Messaging_Publish
+      name: ""
+    Catalog_catalog/product-variant/updated:
+      template: Messaging_Publish
+      name: ""
+    Catalog_GraphQL_Provided_Gateway:
+      template: GraphQL_Provided
+      name: ""
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+    - to: KotlinGraphQLLibrary
+      template: Includes
+Shipment:
+  template: Microservice
+  interfaces:
+    Shipment_payment/payment/payment-enabled:
+      template: Messaging_Subscribe
+      relations:
+        - to: Payment_payment/payment/payment-enabled
+          template: Event
+      name: ""
+    Shipment_address/user-address/created:
+      template: Messaging_Subscribe
+      relations:
+        - to: Address_address/user-address/created
+          template: Event
+      name: ""
+    Shipment_address/vendor-address/created:
+      template: Messaging_Subscribe
+      relations:
+        - to: Address_address/vendor-address/created
+          template: Event
+      name: ""
+    Shipment_catalog/product-variant-version/created:
+      template: Messaging_Subscribe
+      relations:
+        - to: Catalog_catalog/product-variant-version/created
+          template: Event
+      name: ""
+    Shipment_return/return/created:
+      template: Messaging_Subscribe
+      relations:
+        - to: Return_return/return/created
+          template: Event
+      name: ""
+    Shipment_shipment/shipment/created:
+      template: Messaging_Publish
+      name: ""
+    Shipment_shipment/shipment/creation-failed:
+      template: Messaging_Publish
+      name: ""
+    Shipment_shipment/shipment/status-updated:
+      template: Messaging_Publish
+      name: ""
+    Shipment_shipment/shipment-method/created:
+      template: Messaging_Publish
+      name: ""
+    Shipment_shipment/shipment-method/archived:
+      template: Messaging_Publish
+      name: ""
+    Shipment_GraphQL_Provided:
+      template: GraphQL_Provided
+      name: ""
+    Shipment_GraphQL_Provided_Gateway:
+      template: GraphQL_Provided
+      name: ""
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+    - to: KotlinGraphQLLibrary
+      template: Includes
+Payment:
+  template: Microservice
+  interfaces:
+    Payment_user/user/created:
+      template: Messaging_Subscribe
+      relations:
+        - to: User_user/user/created
+          template: Event
+      name: ""
+    Payment_discount/order/validation-succeeded:
+      template: Messaging_Subscribe
+      relations:
+        - to: Discount_discount/order/validation-succeeded
+          template: Event
+      name: ""
+    Payment_payment/payment/payment-enabled:
+      template: Messaging_Publish
+      name: ""
+    Payment_payment/payment/payment-processed:
+      template: Messaging_Publish
+      name: ""
+    Payment_payment/payment/payment-failed:
+      template: Messaging_Publish
+      name: ""
+    Payment_GraphQL_Provided_Gateway:
+      template: GraphQL_Provided
+      name: ""
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+    - to: NodeJsGraphQLLibrary
+      template: Includes
+    - to: mongoNestJSLibrary
+      template: Includes
+Order:
+  template: Microservice
+  interfaces:
+    Order_catalog/product-variant-version/created:
+      template: Messaging_Subscribe
+      relations:
+        - to: Catalog_catalog/product-variant-version/created
+          template: Event
+      name: ""
+    Order_discount/coupon/created:
+      template: Messaging_Subscribe
+      relations:
+        - to: Discount_discount/coupon/created
+          template: Event
+      name: ""
+    Order_tax/tax-rate-version/created:
+      template: Messaging_Subscribe
+      relations:
+        - to: Tax_tax/tax-rate-version/created
+          template: Event
+      name: ""
+    Order_shipment/shipment-method/created:
+      template: Messaging_Subscribe
+      relations:
+        - to: Shipment_shipment/shipment-method/created
+          template: Event
+      name: ""
+    Order_user/user/created:
+      template: Messaging_Subscribe
+      relations:
+        - to: User_user/user/created
+          template: Event
+      name: ""
+    Order_address/user-address/created:
+      template: Messaging_Subscribe
+      relations:
+        - to: Address_address/user-address/created
+          template: Event
+      name: ""
+    Order_address/user-address/archived:
+      template: Messaging_Subscribe
+      relations:
+        - to: Address_address/user-address/archived
+          template: Event
+      name: ""
+    Order_shipment/shipment/creation-failed:
+      template: Messaging_Subscribe
+      relations:
+        - to: Shipment_shipment/shipment/creation-failed
+          template: Event
+      name: ""
+    Order_order/order/created:
+      template: Messaging_Publish
+      name: ""
+    Order_order/order-compensation/created:
+      template: Messaging_Publish
+      name: ""
+    Order_GraphQL_Required_Discount:
+      template: GraphQL_Required
+      relations:
+        - to: Discount_GraphQL_Provided
+          template: Calls
+      name: ""
+    Order_GraphQL_Required_Inventory:
+      template: GraphQL_Required
+      relations:
+        - to: Inventory_GraphQL_Provided
+          template: Calls
+      name: ""
+    Order_GraphQL_Required_Shipment:
+      template: GraphQL_Required
+      relations:
+        - to: Shipment_GraphQL_Provided
+          template: Calls
+      name: ""
+    Order_GraphQL_Required_ShoppingCart:
+      template: GraphQL_Required
+      relations:
+        - to: ShoppingCart_GraphQL_Provided
+          template: Calls
+      name: ""
+    Order_GraphQL_Provided_Gateway:
+      template: GraphQL_Provided
+      name: ""
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+    - to: RUSTGraphQLLibrary
+      template: Includes
+Inventory:
+  template: Microservice
+  interfaces:
+    Inventory_catalog/product-variant/created:
+      template: Messaging_Subscribe
+      relations:
+        - to: Catalog_catalog/product-variant/created
+          template: Event
+      name: ""
+    Inventory_order/order/created:
+      template: Messaging_Subscribe
+      relations:
+        - to: Order_order/order/created
+          template: Event
+      name: ""
+    Inventory_payment/payment/payment-enabled:
+      template: Messaging_Subscribe
+      relations:
+        - to: Payment_payment/payment/payment-enabled
+          template: Event
+      name: ""
+    Inventory_payment/payment/payment-failed:
+      template: Messaging_Subscribe
+      relations:
+        - to: Payment_payment/payment/payment-failed
+          template: Event
+      name: ""
+    Inventory_shipment/shipment/status-updated:
+      template: Messaging_Subscribe
+      relations:
+        - to: Shipment_shipment/shipment/status-updated
+          template: Event
+      name: ""
+    Inventory_shipment/shipment/created:
+      template: Messaging_Subscribe
+      relations:
+        - to: Shipment_shipment/shipment/created
+          template: Event
+      name: ""
+    Inventory_discount/order/validation-failed:
+      template: Messaging_Subscribe
+      relations:
+        - to: Discount_discount/order/validation-failed
+          template: Event
+      name: ""
+    Inventory_inventory/product/created:
+      template: Messaging_Publish
+      name: ""
+    Inventory_inventory/product-item/reservation-succeeded:
+      template: Messaging_Publish
+      name: ""
+    Inventory_inventory/product-item/reservation-failed:
+      template: Messaging_Publish
+      name: ""
+    Inventory_GraphQL_Provided:
+      template: GraphQL_Provided
+      name: ""
+    Inventory_GraphQL_Provided_Gateway:
+      template: GraphQL_Provided
+      name: ""
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+    - to: NodeJsGraphQLLibrary
+      template: Includes
+    - to: mongoNestJSLibrary
+      template: Includes
+Tax:
+  template: Microservice
+  interfaces:
+    Tax_tax/tax-rate/created:
+      template: Messaging_Publish
+      name: ""
+    Tax_tax/tax-rate-version/created:
+      template: Messaging_Publish
+      name: ""
+    Tax_GraphQL_Provided_Gateway:
+      template: GraphQL_Provided
+      name: ""
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+    - to: KotlinGraphQLLibrary
+      template: Includes
+Media:
+  template: Microservice
+  interfaces:
+    Media_media/media/created:
+      template: Messaging_Publish
+      name: ""
+    Media_GraphQL_Provided_Gateway:
+      template: GraphQL_Provided
+      name: ""
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+    - to: RUSTGraphQLLibrary
+      template: Includes

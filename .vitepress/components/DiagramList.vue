@@ -46,7 +46,10 @@ const diagrams: Record<string, () => Promise<any>> = {
     "Train Ticket": () => import("../../diagrams/Train-Ticket.yaml?raw"),
     DeathStarBench: () => import("../../diagrams/DeathStarBench-complete.yaml?raw"),
     "Online Boutique (expanded)": () => import("../../diagrams/Online-Boutique-expanded.yaml?raw"),
-    "Astronomy Shop": () => import("../../diagrams/Astronomy-Shop.yaml?raw")
+    "Astronomy Shop": () => import("../../diagrams/Astronomy-Shop.yaml?raw"),
+    MiSArch: () => import("../../diagrams/MiSArch.yaml?raw"),
+    "MiSArch (simplified)": () => import("../../diagrams/MiSArch-simplified.yaml?raw"),
+    "MiSArch (extended)": () => import("../../diagrams/MiSArch-extended.yaml?raw"),
 };
 
 async function openDiagram(name: string) {

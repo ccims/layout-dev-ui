@@ -1,0 +1,482 @@
+Infrastructure:
+  template: Infrastructure
+RUSTGraphQLLibrary:
+  template: Library
+KotlinGraphQLLibrary:
+  template: Library
+NodeJsGraphQLLibrary:
+  template: Library
+keycloakJS:
+  template: Library
+mongoNestJSLibrary:
+  template: Library
+Frontend:
+  template: Frontend
+  interfaces:
+    Frontend_GraphQL_Required:
+      template: GraphQL_Required
+      relations:
+        - to: Gateway_GraphQL_Provided
+          template: Calls
+      name: GraphQL (Required)
+    Frontend_OAUTH_Required:
+      template: OAUTH_Required
+      relations:
+        - to: Keycloak_OAUTH_Provided
+          template: Calls
+      name: OAUTH (Required)
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+    - to: keycloakJS
+      template: Includes
+Gateway:
+  template: Microservice
+  interfaces:
+    Gateway_GraphQL_Provided:
+      template: GraphQL_Provided
+      name: GraphQL
+      relations: []
+    Gateway_GraphQL_Required:
+      template: GraphQL_Required
+      relations:
+        - to: User_GraphQL_Provided
+          template: Calls
+        - to: Address_GraphQL_Provided
+          template: Calls
+        - to: Invoice_GraphQL_Provided
+          template: Calls
+        - to: Discount_GraphQL_Provided
+          template: Calls
+        - to: Wishlist_GraphQL_Provided
+          template: Calls
+        - to: ShoppingCart_GraphQL_Provided
+          template: Calls
+        - to: Return_GraphQL_Provided
+          template: Calls
+        - to: Review_GraphQL_Provided
+          template: Calls
+        - to: Catalog_GraphQL_Provided
+          template: Calls
+        - to: Shipment_GraphQL_Provided
+          template: Calls
+        - to: Payment_GraphQL_Provided
+          template: Calls
+        - to: Order_GraphQL_Provided
+          template: Calls
+        - to: Inventory_GraphQL_Provided
+          template: Calls
+        - to: Tax_GraphQL_Provided
+          template: Calls
+        - to: Media_GraphQL_Provided
+          template: Calls
+      name: GraphQL (Required)
+    Gateway_OAUTH_Required:
+      template: OAUTH_Required
+      relations:
+        - to: Keycloak_OAUTH_Provided
+          template: Calls
+      name: OAUTH (Required)
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+Notification:
+  template: Microservice
+  interfaces:
+    Notification_Messaging_Subscribe:
+      template: Messaging_Subscribe
+      name: Subscribe
+      relations: []
+    Notification_GraphQL_Provided:
+      template: GraphQL_Provided
+      name: GraphQL
+      relations: []
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+    - to: KotlinGraphQLLibrary
+      template: Includes
+Keycloak:
+  template: Microservice
+  interfaces:
+    Keycloak_Messaging_Publish:
+      template: Messaging_Publish
+      name: Publish
+      relations: []
+    Keycloak_OAUTH_Provided:
+      template: OAUTH_Provided
+      name: OAUTH
+      relations: []
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+User:
+  template: Microservice
+  interfaces:
+    User_Messaging_Subscribe:
+      template: Messaging_Subscribe
+      relations:
+        - to: Keycloak_Messaging_Publish
+          template: Event
+      name: Subscribe
+    User_Messaging_Publish:
+      template: Messaging_Publish
+      name: Publish
+      relations: []
+    User_GraphQL_Provided:
+      template: GraphQL_Provided
+      name: GraphQL
+      relations: []
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+    - to: KotlinGraphQLLibrary
+      template: Includes
+Address:
+  template: Microservice
+  interfaces:
+    Address_Messaging_Subscribe:
+      template: Messaging_Subscribe
+      relations:
+        - to: User_Messaging_Publish
+          template: Event
+      name: Subscribe
+    Address_Messaging_Publish:
+      template: Messaging_Publish
+      name: Publish
+      relations: []
+    Address_GraphQL_Provided:
+      template: GraphQL_Provided
+      name: GraphQL
+      relations: []
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+    - to: KotlinGraphQLLibrary
+      template: Includes
+Invoice:
+  template: Microservice
+  interfaces:
+    Invoice_Messaging_Subscribe:
+      template: Messaging_Subscribe
+      relations:
+        - to: Discount_Messaging_Publish
+          template: Event
+        - to: Address_Messaging_Publish
+          template: Event
+        - to: User_Messaging_Publish
+          template: Event
+      name: Subscribe
+    Invoice_Messaging_Publish:
+      template: Messaging_Publish
+      name: Publish
+      relations: []
+    Invoice_GraphQL_Provided:
+      template: GraphQL_Provided
+      name: GraphQL
+      relations: []
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+    - to: RUSTGraphQLLibrary
+      template: Includes
+Discount:
+  template: Microservice
+  interfaces:
+    Discount_Messaging_Subscribe:
+      template: Messaging_Subscribe
+      relations:
+        - to: Inventory_Messaging_Publish
+          template: Event
+        - to: User_Messaging_Publish
+          template: Event
+        - to: Catalog_Messaging_Publish
+          template: Event
+      name: Subscribe
+    Discount_Messaging_Publish:
+      template: Messaging_Publish
+      name: Publish
+      relations: []
+    Discount_GraphQL_Provided:
+      template: GraphQL_Provided
+      name: GraphQL
+      relations: []
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+    - to: KotlinGraphQLLibrary
+      template: Includes
+Wishlist:
+  template: Microservice
+  interfaces:
+    Wishlist_Messaging_Subscribe:
+      template: Messaging_Subscribe
+      relations:
+        - to: User_Messaging_Publish
+          template: Event
+        - to: Catalog_Messaging_Publish
+          template: Event
+      name: Subscribe
+    Wishlist_GraphQL_Provided:
+      template: GraphQL_Provided
+      name: GraphQL
+      relations: []
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+    - to: RUSTGraphQLLibrary
+      template: Includes
+ShoppingCart:
+  template: Microservice
+  interfaces:
+    ShoppingCart_Messaging_Subscribe:
+      template: Messaging_Subscribe
+      relations:
+        - to: User_Messaging_Publish
+          template: Event
+        - to: Catalog_Messaging_Publish
+          template: Event
+        - to: Order_Messaging_Publish
+          template: Event
+      name: Subscribe
+    ShoppingCart_GraphQL_Provided:
+      template: GraphQL_Provided
+      name: GraphQL
+      relations: []
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+    - to: RUSTGraphQLLibrary
+      template: Includes
+Return:
+  template: Microservice
+  interfaces:
+    Return_Messaging_Subscribe:
+      template: Messaging_Subscribe
+      relations:
+        - to: Shipment_Messaging_Publish
+          template: Event
+        - to: Order_Messaging_Publish
+          template: Event
+        - to: Catalog_Messaging_Publish
+          template: Event
+      name: Subscribe
+    Return_Messaging_Publish:
+      template: Messaging_Publish
+      name: Publish
+      relations: []
+    Return_GraphQL_Provided:
+      template: GraphQL_Provided
+      name: GraphQL
+      relations: []
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+    - to: KotlinGraphQLLibrary
+      template: Includes
+Review:
+  template: Microservice
+  interfaces:
+    Review_Messaging_Subscribe:
+      template: Messaging_Subscribe
+      relations:
+        - to: User_Messaging_Publish
+          template: Event
+        - to: Catalog_Messaging_Publish
+          template: Event
+      name: Subscribe
+    Review_GraphQL_Provided:
+      template: GraphQL_Provided
+      name: GraphQL
+      relations: []
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+    - to: RUSTGraphQLLibrary
+      template: Includes
+Catalog:
+  template: Microservice
+  interfaces:
+    Catalog_Messaging_Subscribe:
+      template: Messaging_Subscribe
+      relations:
+        - to: Tax_Messaging_Publish
+          template: Event
+        - to: Media_Messaging_Publish
+          template: Event
+      name: Subscribe
+    Catalog_Messaging_Publish:
+      template: Messaging_Publish
+      name: Publish
+      relations: []
+    Catalog_GraphQL_Provided:
+      template: GraphQL_Provided
+      name: GraphQL
+      relations: []
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+    - to: KotlinGraphQLLibrary
+      template: Includes
+Shipment:
+  template: Microservice
+  interfaces:
+    Shipment_Messaging_Subscribe:
+      template: Messaging_Subscribe
+      relations:
+        - to: Payment_Messaging_Publish
+          template: Event
+        - to: Address_Messaging_Publish
+          template: Event
+        - to: Catalog_Messaging_Publish
+          template: Event
+        - to: Return_Messaging_Publish
+          template: Event
+      name: Subscribe
+    Shipment_Messaging_Publish:
+      template: Messaging_Publish
+      name: Publish
+      relations: []
+    Shipment_GraphQL_Provided:
+      template: GraphQL_Provided
+      name: GraphQL
+      relations: []
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+    - to: KotlinGraphQLLibrary
+      template: Includes
+Payment:
+  template: Microservice
+  interfaces:
+    Payment_Messaging_Subscribe:
+      template: Messaging_Subscribe
+      relations:
+        - to: User_Messaging_Publish
+          template: Event
+        - to: Discount_Messaging_Publish
+          template: Event
+      name: Subscribe
+    Payment_Messaging_Publish:
+      template: Messaging_Publish
+      name: Publish
+      relations: []
+    Payment_GraphQL_Provided:
+      template: GraphQL_Provided
+      name: GraphQL
+      relations: []
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+    - to: NodeJsGraphQLLibrary
+      template: Includes
+    - to: mongoNestJSLibrary
+      template: Includes
+Order:
+  template: Microservice
+  interfaces:
+    Order_Messaging_Subscribe:
+      template: Messaging_Subscribe
+      relations:
+        - to: Catalog_Messaging_Publish
+          template: Event
+        - to: Discount_Messaging_Publish
+          template: Event
+        - to: Tax_Messaging_Publish
+          template: Event
+        - to: Shipment_Messaging_Publish
+          template: Event
+        - to: User_Messaging_Publish
+          template: Event
+        - to: Address_Messaging_Publish
+          template: Event
+      name: Subscribe
+    Order_Messaging_Publish:
+      template: Messaging_Publish
+      name: Publish
+      relations: []
+    Order_GraphQL_Required:
+      template: GraphQL_Required
+      relations:
+        - to: Discount_GraphQL_Provided
+          template: Calls
+        - to: Inventory_GraphQL_Provided
+          template: Calls
+        - to: Shipment_GraphQL_Provided
+          template: Calls
+        - to: ShoppingCart_GraphQL_Provided
+          template: Calls
+      name: GraphQL (Required)
+    Order_GraphQL_Provided:
+      template: GraphQL_Provided
+      name: GraphQL
+      relations: []
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+    - to: RUSTGraphQLLibrary
+      template: Includes
+Inventory:
+  template: Microservice
+  interfaces:
+    Inventory_Messaging_Subscribe:
+      template: Messaging_Subscribe
+      relations:
+        - to: Catalog_Messaging_Publish
+          template: Event
+        - to: Order_Messaging_Publish
+          template: Event
+        - to: Payment_Messaging_Publish
+          template: Event
+        - to: Shipment_Messaging_Publish
+          template: Event
+        - to: Discount_Messaging_Publish
+          template: Event
+      name: Subscribe
+    Inventory_Messaging_Publish:
+      template: Messaging_Publish
+      name: Publish
+      relations: []
+    Inventory_GraphQL_Provided:
+      template: GraphQL_Provided
+      name: GraphQL
+      relations: []
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+    - to: NodeJsGraphQLLibrary
+      template: Includes
+    - to: mongoNestJSLibrary
+      template: Includes
+Tax:
+  template: Microservice
+  interfaces:
+    Tax_Messaging_Publish:
+      template: Messaging_Publish
+      name: Publish
+      relations: []
+    Tax_GraphQL_Provided:
+      template: GraphQL_Provided
+      name: GraphQL
+      relations: []
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+    - to: KotlinGraphQLLibrary
+      template: Includes
+Media:
+  template: Microservice
+  interfaces:
+    Media_Messaging_Publish:
+      template: Messaging_Publish
+      name: Publish
+      relations: []
+    Media_GraphQL_Provided:
+      template: GraphQL_Provided
+      name: GraphQL
+      relations: []
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+    - to: RUSTGraphQLLibrary
+      template: Includes
