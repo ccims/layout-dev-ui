@@ -1,0 +1,263 @@
+Infrastructure:
+  template: Infrastructure
+RUSTGraphQLLibrary:
+  template: Library
+KotlinGraphQLLibrary:
+  template: Library
+NodeJsGraphQLLibrary:
+  template: Library
+keycloakJS:
+  template: Library
+mongoNestJSLibrary:
+  template: Library
+Frontend:
+  template: Frontend
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+    - to: keycloakJS
+      template: Includes
+    - to: Gateway
+      template: Calls
+    - to: Keycloak
+      template: Calls
+Gateway:
+  template: Microservice
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+    - to: User
+      template: Calls
+    - to: Address
+      template: Calls
+    - to: Invoice
+      template: Calls
+    - to: Discount
+      template: Calls
+    - to: Wishlist
+      template: Calls
+    - to: ShoppingCart
+      template: Calls
+    - to: Return
+      template: Calls
+    - to: Review
+      template: Calls
+    - to: Catalog
+      template: Calls
+    - to: Shipment
+      template: Calls
+    - to: Payment
+      template: Calls
+    - to: Order
+      template: Calls
+    - to: Inventory
+      template: Calls
+    - to: Tax
+      template: Calls
+    - to: Media
+      template: Calls
+    - to: Keycloak
+      template: Calls
+Notification:
+  template: Microservice
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+    - to: KotlinGraphQLLibrary
+      template: Includes
+Keycloak:
+  template: Microservice
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+User:
+  template: Microservice
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+    - to: KotlinGraphQLLibrary
+      template: Includes
+    - to: Keycloak
+      template: Event
+Address:
+  template: Microservice
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+    - to: KotlinGraphQLLibrary
+      template: Includes
+    - to: User
+      template: Event
+Invoice:
+  template: Microservice
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+    - to: RUSTGraphQLLibrary
+      template: Includes
+    - to: Discount
+      template: Event
+    - to: Address
+      template: Event
+    - to: User
+      template: Event
+Discount:
+  template: Microservice
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+    - to: KotlinGraphQLLibrary
+      template: Includes
+    - to: Inventory
+      template: Event
+    - to: User
+      template: Event
+    - to: Catalog
+      template: Event
+Wishlist:
+  template: Microservice
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+    - to: RUSTGraphQLLibrary
+      template: Includes
+    - to: User
+      template: Event
+    - to: Catalog
+      template: Event
+ShoppingCart:
+  template: Microservice
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+    - to: RUSTGraphQLLibrary
+      template: Includes
+    - to: User
+      template: Event
+    - to: Catalog
+      template: Event
+    - to: Order
+      template: Event
+Return:
+  template: Microservice
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+    - to: KotlinGraphQLLibrary
+      template: Includes
+    - to: Shipment
+      template: Event
+    - to: Order
+      template: Event
+    - to: Catalog
+      template: Event
+Review:
+  template: Microservice
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+    - to: RUSTGraphQLLibrary
+      template: Includes
+    - to: User
+      template: Event
+    - to: Catalog
+      template: Event
+Catalog:
+  template: Microservice
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+    - to: KotlinGraphQLLibrary
+      template: Includes
+    - to: Tax
+      template: Event
+    - to: Media
+      template: Event
+Shipment:
+  template: Microservice
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+    - to: KotlinGraphQLLibrary
+      template: Includes
+    - to: Payment
+      template: Event
+    - to: Address
+      template: Event
+    - to: Catalog
+      template: Event
+    - to: Return
+      template: Event
+Payment:
+  template: Microservice
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+    - to: NodeJsGraphQLLibrary
+      template: Includes
+    - to: mongoNestJSLibrary
+      template: Includes
+    - to: User
+      template: Event
+    - to: Discount
+      template: Event
+Order:
+  template: Microservice
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+    - to: RUSTGraphQLLibrary
+      template: Includes
+    - to: Catalog
+      template: Event
+    - to: Discount
+      template: Event
+    - to: Tax
+      template: Event
+    - to: Shipment
+      template: Event
+    - to: User
+      template: Event
+    - to: Address
+      template: Event
+    - to: Discount
+      template: Calls
+    - to: Inventory
+      template: Calls
+    - to: Shipment
+      template: Calls
+    - to: ShoppingCart
+      template: Calls
+Inventory:
+  template: Microservice
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+    - to: NodeJsGraphQLLibrary
+      template: Includes
+    - to: mongoNestJSLibrary
+      template: Includes
+    - to: Catalog
+      template: Event
+    - to: Order
+      template: Event
+    - to: Payment
+      template: Event
+    - to: Shipment
+      template: Event
+    - to: Discount
+      template: Event
+Tax:
+  template: Microservice
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+    - to: KotlinGraphQLLibrary
+      template: Includes
+Media:
+  template: Microservice
+  relations:
+    - to: Infrastructure
+      template: Hosted_on
+    - to: RUSTGraphQLLibrary
+      template: Includes
