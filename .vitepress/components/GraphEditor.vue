@@ -14,7 +14,18 @@
                         </div>
                     </div>
                     <div v-if="metadata" class="modal-container metadata">
-                        <p>{{ metadata }}</p>
+                        <template v-for="[key, value] in Object.entries(metadata)" :key="key">
+                            <details v-if="typeof value == 'object'" class="details custom-block">
+                                <summary>{{ key }}</summary>
+                                <pre>{{ JSON.stringify(value, null, 4) }}</pre>
+                            </details>
+                            <div v-else class="details custom-block plain">
+                                <p>
+                                    <spant class="title">{{ key }}</spant
+                                    >: {{ value }}
+                                </p>
+                            </div>
+                        </template>
                     </div>
                 </div>
             </Pane>
@@ -187,7 +198,7 @@ const fetchResult = asyncComputed<{ data: GraphLayout; meta: any }>(
 );
 
 const layout = computed(() => fetchResult.value.data);
-const metadata = computed(() => JSON.stringify(fetchResult.value.meta, null, 4));
+const metadata = computed(() => fetchResult.value.meta);
 
 watchEffect(() => {
     if (layout.value != undefined && modelSource.value != undefined && throttledParsedModel.value != null) {
@@ -285,10 +296,11 @@ onBeforeUnmount(() => {
 }
 
 .modal-container {
-    padding: 30px;
-    padding-top: 25px;
+    padding: 8px;
     border-radius: 12px;
     transition: all 0.3s ease;
+    gap: 8px;
+    display: grid;
 }
 
 .modal-container.error {
@@ -306,6 +318,21 @@ onBeforeUnmount(() => {
     color: var(--vp-c-neutral-7);
     white-space: preserve;
     box-shadow: var(--vp-shadow-3);
+}
+
+.custom-block.details {
+    padding: 8px;
+}
+
+.custom-block.details summary {
+    margin: 0;
+}
+
+.custom-block.details.plain {
+    padding-left: 24px;
+    .title {
+        font-weight: 700;
+    }
 }
 </style>
 <style>
