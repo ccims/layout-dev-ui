@@ -27,6 +27,39 @@
                             </div>
                         </template>
                     </div>
+                    <div class="modal-container views">
+                        <div class="views-header">
+                            <div v-if="showFilterDialog" class="title">Components</div>
+                            <IconButton
+                                :icon="showFilterDialog ? 'vpi-close' : 'vpi-filter'"
+                                label="Filter"
+                                @click="showFilterDialog = !showFilterDialog"
+                            />
+                        </div>
+                        <template v-if="showFilterDialog">
+                            <div v-for="template in componentTemplates" :key="template" class="template-toggle">
+                                <VPSwitch
+                                    :class="{ checked: !disabledComponentTemplates.has(template) }"
+                                    @click="toggleComponentTemplate(template)"
+                                /><span>{{ template }}</span>
+                            </div>
+                            <div class="title">Relations</div>
+                            <div v-for="template in relationTemplates" :key="template" class="template-toggle">
+                                <VPSwitch
+                                    :class="{ checked: !disabledRelationTemplates.has(template) }"
+                                    @click="toggleRelationTemplate(template)"
+                                /><span>{{ template }}</span>
+                            </div>
+                            <div class="title">Misc</div>
+                            <div class="template-toggle">
+                                <VPSwitch
+                                    :class="{ checked: hideDisconnected }"
+                                    @click="hideDisconnected = !hideDisconnected"
+                                />
+                                <span>Hide disconnected</span>
+                            </div>
+                        </template>
+                    </div>
                 </div>
             </Pane>
         </Splitpanes>
@@ -40,7 +73,6 @@ import "splitpanes/dist/splitpanes.css";
 import { ref, onBeforeUnmount, watch, computed, toRaw, watchEffect, PropType } from "vue";
 import { TYPES } from "sprotty";
 import { RequestBoundsAction } from "sprotty-protocol";
-
 import {
     createContainer,
     CreateRelationContext,
@@ -55,7 +87,7 @@ import { MonacoEditorLanguageClientWrapper, UserConfig } from "monaco-editor-wra
 import { shallowRef } from "vue";
 import { inject } from "vue";
 import { Disposable } from "vscode-languageserver-protocol";
-import { asyncComputed, refThrottled, watchImmediate } from "@vueuse/core";
+import { asyncComputed, refThrottled } from "@vueuse/core";
 import { v4 as uuid } from "uuid";
 import "@codingame/monaco-vscode-yaml-default-extension";
 import { useData } from "vitepress";
@@ -64,6 +96,9 @@ import { parseModel } from "../util/parseModel";
 import { settingsKey } from "../theme/settings";
 import { validateModel } from "../util/validateModel";
 import { View } from "../util/view";
+import VPSwitch from "vitepress/dist/client/theme-default/components/VPSwitch.vue";
+import { filterModel } from "../util/filterModel";
+import IconButton from "./IconButton.vue";
 
 const id = uuid();
 
@@ -117,7 +152,7 @@ const modelSource = shallowRef<ModelSource | undefined>();
 
 const state = computed(() => {
     try {
-        const parsedModel = parseModel(model.value, props.view);
+        const parsedModel = parseModel(model.value);
         validateModel(parsedModel);
         return { parsedModel, errorMessage: null };
     } catch (e) {
@@ -128,12 +163,32 @@ const state = computed(() => {
 
 const parsedModel = computed(() => state.value.parsedModel);
 const errorMessage = computed(() => state.value.errorMessage);
+const componentTemplates = computed(
+    () => new Set(parsedModel.value?.components.map((component) => component.template))
+);
+const relationTemplates = computed(() => new Set(parsedModel.value?.relations.map((relation) => relation.template)));
+const disabledComponentTemplates = ref(new Set<string>());
+const disabledRelationTemplates = ref(new Set<string>());
+const hideDisconnected = ref(false);
+const showFilterDialog = ref(false);
+
+const filteredModel = computed(() => {
+    if (parsedModel.value == undefined) {
+        return undefined;
+    }
+    return filterModel(
+        parsedModel.value,
+        disabledComponentTemplates.value,
+        disabledRelationTemplates.value,
+        hideDisconnected.value
+    );
+});
 
 const settings = inject(settingsKey);
 
 const layoutServerUrl = computed(() => settings!.value.serverUrl ?? "");
 
-const throttledParsedModel = refThrottled(parsedModel, 800, true, true);
+const throttledFilteredModel = refThrottled(filteredModel, 800, true, true);
 
 const shapeGenerator = new ShapeGenerator();
 
@@ -174,12 +229,12 @@ function enhanceModelElement(
 
 const fetchResult = asyncComputed<{ data: GraphLayout; meta: any }>(
     async () => {
-        const modelValue = throttledParsedModel.value;
+        const modelValue = throttledFilteredModel.value;
         if (modelValue == undefined || layoutServerUrl.value == "" || modelSource.value == undefined) {
             return {};
         }
         const boundsRes = await modelSource.value.actionDispatcher.request(
-            RequestBoundsAction.create((modelSource.value as any).createRoot(throttledParsedModel.value, {}, true))
+            RequestBoundsAction.create((modelSource.value as any).createRoot(throttledFilteredModel.value, {}, true))
         );
         const sizesMap = new Map<string, { width: number; height: number }>();
         for (const bound of boundsRes.bounds) {
@@ -201,14 +256,30 @@ const layout = computed(() => fetchResult.value.data);
 const metadata = computed(() => fetchResult.value.meta);
 
 watchEffect(() => {
-    if (layout.value != undefined && modelSource.value != undefined && throttledParsedModel.value != null) {
+    if (layout.value != undefined && modelSource.value != undefined && throttledFilteredModel.value != null) {
         modelSource.value.updateGraph({
-            graph: throttledParsedModel.value,
+            graph: throttledFilteredModel.value,
             layout: layout.value,
             fitToBounds: true
         });
     }
 });
+
+function toggleComponentTemplate(template: string) {
+    if (disabledComponentTemplates.value.has(template)) {
+        disabledComponentTemplates.value.delete(template);
+    } else {
+        disabledComponentTemplates.value.add(template);
+    }
+}
+
+function toggleRelationTemplate(template: string) {
+    if (disabledRelationTemplates.value.has(template)) {
+        disabledRelationTemplates.value.delete(template);
+    } else {
+        disabledRelationTemplates.value.add(template);
+    }
+}
 
 onMounted(async () => {
     const wrapper = new MonacoEditorLanguageClientWrapper();
@@ -296,7 +367,7 @@ onBeforeUnmount(() => {
 }
 
 .modal-container {
-    padding: 8px;
+    padding: 10px;
     border-radius: 12px;
     transition: all 0.3s ease;
     gap: 8px;
@@ -310,14 +381,36 @@ onBeforeUnmount(() => {
     color: var(--vp-c-neutral);
 }
 
-.modal-container.metadata {
+.modal-container.metadata,
+.modal-container.views {
     position: absolute;
     top: 20px;
-    right: 20px;
     background-color: var(--vp-c-bg-alt);
     color: var(--vp-c-neutral-7);
     white-space: preserve;
     box-shadow: var(--vp-shadow-3);
+}
+
+.modal-container.metadata {
+    right: 20px;
+}
+
+.modal-container.views {
+    left: 20px;
+}
+
+.views-header {
+    display: flex;
+    align-items: center;
+
+    .title {
+        flex-grow: 1;
+    }
+}
+
+.modal-container.views .views-header :deep(.icon-button:has(.vpi-close)) {
+    width: 20px;
+    height: 20px;
 }
 
 .custom-block.details {
@@ -330,9 +423,29 @@ onBeforeUnmount(() => {
 
 .custom-block.details.plain {
     padding-left: 24px;
-    .title {
-        font-weight: 700;
+}
+
+.title {
+    font-weight: 700;
+}
+
+.template-toggle {
+    display: flex;
+
+    button {
+        margin-right: 8px;
     }
+}
+
+.VPSwitch.checked :deep(.check) {
+    transform: translateX(18px);
+}
+
+.VPSwitch.checked {
+    background-color: var(--vp-c-brand);
+    transition:
+        border-color 0.25s,
+        background-color 0.4s ease !important;
 }
 </style>
 <style>
