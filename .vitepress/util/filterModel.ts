@@ -34,23 +34,21 @@ export function filterModel(
         );
     }
     if (hideInterfaces) {
+        const componentLookup = new Map<string, string>();
         filteredComponents = filteredComponents.map((component) => {
             component.interfaces.forEach((iface) => {
-                const ifaceRelations = filteredRelations.filter((relation) => relation.start === iface.id || relation.end === iface.id);
-                ifaceRelations.forEach((relation) => {
-                    filteredRelations = filteredRelations.filter((rel) => rel !== relation);
-                    filteredRelations.push({
-                        ...relation,
-                        start: relation.start === iface.id ? component.id : relation.start,
-                        end: relation.end === iface.id ? component.id : relation.end
-                    });
-                });
+                componentLookup.set(iface.id, component.id);
             });
             return {
                 ...component,
                 interfaces: []
             };
         });
+        filteredRelations = filteredRelations.map((relation) => ({
+            ...relation,
+            start: componentLookup.get(relation.start) || relation.start,
+            end: componentLookup.get(relation.end) || relation.end
+        }));
     }
     return {
         components: filteredComponents,
