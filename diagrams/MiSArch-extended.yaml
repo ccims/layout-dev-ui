@@ -27,7 +27,7 @@ Frontend:
       name: ""
   relations:
     - to: Infrastructure        
-      template: Hosted_on 
+      template: Hosted on 
     - to: keycloakJS
       template: Includes
 Gateway:  
@@ -78,7 +78,7 @@ Gateway:
       name: ""
   relations:
     - to: Infrastructure
-      template: Hosted_on
+      template: Hosted on
 Notification:
   template: Microservice
   interfaces:
@@ -93,7 +93,7 @@ Notification:
       name: ""
   relations:
     - to: Infrastructure
-      template: Hosted_on
+      template: Hosted on
     - to: KotlinGraphQLLibrary
       template: Includes
 Keycloak:
@@ -107,7 +107,7 @@ Keycloak:
       name: ""
   relations:
     - to: Infrastructure
-      template: Hosted_on
+      template: Hosted on
 User:
   template: Microservice
   interfaces:
@@ -125,7 +125,7 @@ User:
       name: ""
   relations:
     - to: Infrastructure
-      template: Hosted_on
+      template: Hosted on
     - to: KotlinGraphQLLibrary
       template: Includes
 Address:
@@ -151,7 +151,7 @@ Address:
       name: ""
   relations:
     - to: Infrastructure
-      template: Hosted_on
+      template: Hosted on
     - to: KotlinGraphQLLibrary
       template: Includes
 Invoice:
@@ -195,7 +195,7 @@ Invoice:
       name: ""
   relations:
     - to: Infrastructure
-      template: Hosted_on
+      template: Hosted on
     - to: RUSTGraphQLLibrary
       template: Includes
 Discount:
@@ -257,7 +257,7 @@ Discount:
       name: ""
   relations:
     - to: Infrastructure
-      template: Hosted_on
+      template: Hosted on
     - to: KotlinGraphQLLibrary
       template: Includes
 Wishlist:
@@ -280,7 +280,7 @@ Wishlist:
       name: ""
   relations:
     - to: Infrastructure
-      template: Hosted_on
+      template: Hosted on
     - to: RUSTGraphQLLibrary
       template: Includes
 ShoppingCart:
@@ -312,7 +312,7 @@ ShoppingCart:
       name: ""
   relations:
     - to: Infrastructure
-      template: Hosted_on
+      template: Hosted on
     - to: RUSTGraphQLLibrary
       template: Includes
 Return:
@@ -350,7 +350,7 @@ Return:
       name: ""
   relations:
     - to: Infrastructure
-      template: Hosted_on
+      template: Hosted on
     - to: KotlinGraphQLLibrary
       template: Includes
 Review:
@@ -373,7 +373,7 @@ Review:
       name: ""
   relations:
     - to: Infrastructure
-      template: Hosted_on
+      template: Hosted on
     - to: RUSTGraphQLLibrary
       template: Includes
 Catalog:
@@ -414,7 +414,7 @@ Catalog:
       name: ""
   relations:
     - to: Infrastructure
-      template: Hosted_on
+      template: Hosted on
     - to: KotlinGraphQLLibrary
       template: Includes
 Shipment:
@@ -473,7 +473,7 @@ Shipment:
       name: ""
   relations:
     - to: Infrastructure
-      template: Hosted_on
+      template: Hosted on
     - to: KotlinGraphQLLibrary
       template: Includes
 Payment:
@@ -505,7 +505,7 @@ Payment:
       name: ""
   relations:
     - to: Infrastructure
-      template: Hosted_on
+      template: Hosted on
     - to: NodeJsGraphQLLibrary
       template: Includes
     - to: mongoNestJSLibrary
@@ -596,7 +596,7 @@ Order:
       name: ""
   relations:
     - to: Infrastructure
-      template: Hosted_on
+      template: Hosted on
     - to: RUSTGraphQLLibrary
       template: Includes
 Inventory:
@@ -661,7 +661,7 @@ Inventory:
       name: ""
   relations:
     - to: Infrastructure
-      template: Hosted_on
+      template: Hosted on
     - to: NodeJsGraphQLLibrary
       template: Includes
     - to: mongoNestJSLibrary
@@ -680,7 +680,7 @@ Tax:
       name: ""
   relations:
     - to: Infrastructure
-      template: Hosted_on
+      template: Hosted on
     - to: KotlinGraphQLLibrary
       template: Includes
 Media:
@@ -694,6 +694,6 @@ Media:
       name: ""
   relations:
     - to: Infrastructure
-      template: Hosted_on
+      template: Hosted on
     - to: RUSTGraphQLLibrary
       template: Includes
