@@ -21,7 +21,7 @@
                             </details>
                             <div v-else class="details custom-block plain">
                                 <p>
-                                    <spant class="title">{{ key }}</spant
+                                    <span class="title">{{ key }}</span
                                     >: {{ value }}
                                 </p>
                             </div>
@@ -57,6 +57,13 @@
                                     @click="hideDisconnected = !hideDisconnected"
                                 />
                                 <span>Hide disconnected</span>
+                            </div>
+                            <div class="template-toggle">
+                                <VPSwitch
+                                    :class="{ checked: hideInterfaces }"
+                                    @click="hideInterfaces = !hideInterfaces"
+                                />
+                              <span>Hide interfaces</span>
                             </div>
                         </template>
                     </div>
@@ -170,6 +177,7 @@ const relationTemplates = computed(() => new Set(parsedModel.value?.relations.ma
 const disabledComponentTemplates = ref(new Set<string>());
 const disabledRelationTemplates = ref(new Set<string>());
 const hideDisconnected = ref(false);
+const hideInterfaces = ref(false);
 const showFilterDialog = ref(false);
 
 const filteredModel = computed(() => {
@@ -180,7 +188,8 @@ const filteredModel = computed(() => {
         parsedModel.value,
         disabledComponentTemplates.value,
         disabledRelationTemplates.value,
-        hideDisconnected.value
+        hideDisconnected.value,
+        hideInterfaces.value
     );
 });
 

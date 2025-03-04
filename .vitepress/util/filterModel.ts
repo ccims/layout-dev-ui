@@ -4,7 +4,8 @@ export function filterModel(
     model: LayoutGraph,
     disabledComponents: Set<string>,
     disabledRelations: Set<string>,
-    hideDisconnected: boolean
+    hideDisconnected: boolean,
+    hideInterfaces: boolean
 ): LayoutGraph {
     let filteredComponents = model.components.filter((component) => !disabledComponents.has(component.template));
     const remainingNodes = new Set<string>();
@@ -14,7 +15,7 @@ export function filterModel(
             remainingNodes.add(iface.id);
         }
     }
-    const filteredRelations = model.relations.filter((relation) => {
+    let filteredRelations = model.relations.filter((relation) => {
         return (
             remainingNodes.has(relation.start) &&
             remainingNodes.has(relation.end) &&
@@ -31,6 +32,25 @@ export function filterModel(
             (component) =>
                 connectedNodes.has(component.id) || component.interfaces.some((iface) => connectedNodes.has(iface.id))
         );
+    }
+    if (hideInterfaces) {
+        filteredComponents = filteredComponents.map((component) => {
+            component.interfaces.forEach((iface) => {
+                const ifaceRelations = filteredRelations.filter((relation) => relation.start === iface.id || relation.end === iface.id);
+                ifaceRelations.forEach((relation) => {
+                    filteredRelations = filteredRelations.filter((rel) => rel !== relation);
+                    filteredRelations.push({
+                        ...relation,
+                        start: relation.start === iface.id ? component.id : relation.start,
+                        end: relation.end === iface.id ? component.id : relation.end
+                    });
+                });
+            });
+            return {
+                ...component,
+                interfaces: []
+            };
+        });
     }
     return {
         components: filteredComponents,
