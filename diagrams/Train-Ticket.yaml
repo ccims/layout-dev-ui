@@ -23,6 +23,8 @@ APIGateway:
       template: Calls
     - to: notification_REST
       template: Calls
+    - to: route_REST
+      template: Calls
     - to: Kubernetes
       template: Hosted on
 
