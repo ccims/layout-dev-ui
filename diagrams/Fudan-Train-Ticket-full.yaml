@@ -1,0 +1,302 @@
+Frontend:
+  name: frontend
+  template: Frontend
+  relations:
+    - to: APIGateway
+      template: Calls
+APIGateway:
+  name: gateway
+  template: Microservice
+
+Kubernetes:
+  name: Kubernetes
+  template: Infrastructure
+
+Payment:
+  name: payment
+  template: Microservice
+InsidePayment:
+  name: inside-payment
+  template: Microservice
+  relations:
+    - to: Payment
+      template: Calls
+Notification:
+  name: notification
+  template: Microservice
+Delivery:
+  name: delivery
+  template: Microservice
+  relations:
+    - to: Notification
+      template: Calls
+Cancel:
+  name: cancel
+  template: Misc
+  relations:
+    - to: Notification
+      template: Calls
+    - to: Order
+      template: Calls
+Execute:
+  name: execute
+  template: Misc
+  relations:
+    - to: Order
+      template: Calls
+Voucher:
+  name: voucher
+  template: Microservice
+  relations:
+    - to: Order
+      template: Calls
+WaitOrder:
+  name: wait-order
+  template: Microservice
+  relations:
+    - to: Preserve
+      template: Calls
+Preserve:
+  name: preserve/other
+  template: Misc
+  relations:
+    - to: Notification
+      template: Calls
+    - to: User
+      template: Calls
+    - to: Food
+      template: Calls
+    - to: Security
+      template: Calls
+    - to: Consign
+      template: Calls
+    - to: Contacts
+      template: Calls
+    - to: Assurance
+      template: Calls
+    - to: Basic
+      template: Calls
+    - to: Travel
+      template: Calls
+    - to: Seat
+      template: Calls
+    - to: Order
+      template: Calls
+Order: 
+  name: order/other
+  template: Microservice
+AdminOrder: 
+  name: admin-order
+  template: Misc
+  relations:
+    - to: Order
+      template: Calls
+Rebook:
+  name: rebook
+  template: Misc
+  relations:
+    - to: Payment
+      template: Calls
+    - to: User
+      template: Calls
+    - to: Food
+      template: Calls
+    - to: Security
+      template: Calls
+    - to: Consign
+      template: Calls
+    - to: Contacts
+      template: Calls
+    - to: Assurance
+      template: Calls
+    - to: Basic
+      template: Calls
+    - to: Travel
+      template: Calls
+    - to: Seat
+      template: Calls
+    - to: Order
+      template: Calls
+Verification:
+  name: verification-code
+  template: Misc
+Auth:
+  name: auth
+  template: Microservice
+  relations:
+    - to: Verification
+      template: Calls
+User:
+  name: user
+  template: Microservice
+  relations:
+    - to: Auth
+      template: Microservice
+AdminUser:
+  name: admin-user
+  template: Misc
+  relations:
+    - to: User
+      template: Calls
+Food:
+  name: food
+  template: Microservice
+  relations:
+    - to: StationFood
+      template: Calls
+    - to: TrainFood
+      template: Calls
+StationFood:
+  name: station-food
+  template: Microservice
+TrainFood:
+  name: train-food
+  template: Microservice
+FoodDelivery:
+  name: food-delivery
+  template: Microservice
+  relations:
+    - to: StationFood
+      template: Calls
+Security:
+  name: security
+  template: Microservice
+Consign:
+  name: consign
+  template: Microservice
+  relations:
+    - to: ConsignPrice
+      template: Calls
+ConsignPrice:
+  name: consign-price
+  template: Microservice
+Contacts:
+  name: contacts
+  template: Microservice
+Assurance:
+  name: assurance
+  template: Microservice
+Basic:
+  name: basic
+  template: Misc
+  relations:
+    - to: Price
+      template: Microservice
+    - to: Route
+      template: Microservice
+    - to: Station
+      template: Microservice
+    - to: Train
+      template: Microservice
+Price:
+  name: price
+  template: Microservice
+Route:
+  name: route
+  template: Microservice
+Station:
+  name: station
+  template: Microservice
+Train:
+  name: train
+  template: Microservice
+AdminRoute:
+  name: admin-route
+  template: Misc
+  relations:
+    - to: Route
+      template: Calls
+    - to: Station
+      template: Calls
+RoutePlan:
+  name: route-plan
+  template: Misc
+  relations:
+    - to: Station
+      template: Calls
+    - to: Route
+      template: Calls
+    - to: Train
+      template: Calls
+TravelPlan:
+  name: travel-plan
+  template: Misc
+  relations:
+    - to: RoutePlan
+      template: Calls
+    - to: Station
+      template: Calls
+    - to: Route
+      template: Calls
+    - to: Train
+      template: Calls
+    - to: Travel
+      template: Calls
+    - to: Seat
+      template: Calls
+AdminTravel:
+  name: admin-travel
+  template: Misc
+  relations:
+    - to: Train
+      template: Calls
+    - to: Station
+      template: Calls
+    - to: Route
+      template: Calls
+    - to: Travel
+      template: Calls
+    - to: Seat
+      template: Calls
+Travel:
+  name: travel/2
+  template: Microservice
+  relations:
+    - to: Seat
+      template: Calls
+    - to: Basic
+      template: Calls
+    - to: Train
+      template: Calls
+Seat:
+  name: seat
+  template: Misc
+  relations:
+    - to: Config
+      template: Calls
+    - to: Order
+      template: Calls
+Config:
+  name: config
+  template: Microservice
+AdminBasicInfo:
+  name: admin-basic-info
+  template: Misc
+  relations:
+    - to: Config
+      template: Calls
+    - to: Price
+      template: Calls
+    - to: Train
+      template: Calls
+    - to: Station
+      template: Calls
+    - to: Route
+      template: Calls
+TicketOffice:
+  name: ticket-office
+  template: Microservice
+Avatar:
+  name: avatar
+  template: Misc
+News:
+  name: news
+  template: Misc
+
+MySQL:
+  name: mysql
+  template: Database
+
+RabbitMQ:
+  name: rabbitmq
+  template: Messaging

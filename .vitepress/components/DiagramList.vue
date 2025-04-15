@@ -41,13 +41,14 @@ onClickOutside(dialog, () => {
 const diagrams: Record<string, () => Promise<any>> = {
     "Hello world": () => import("../../diagrams/hello_world.yaml?raw"),
     "Webshop Except Sample": () => import("../../diagrams/webshop-excerpt-sample.yaml?raw"),
-    TeaStore: () => import("../../diagrams/TeaStore.yaml?raw"),
+    "TeaStore": () => import("../../diagrams/TeaStore.yaml?raw"),
     "Sock Shop": () => import("../../diagrams/Sock-Shop.yaml?raw"),
     "Train Ticket": () => import("../../diagrams/Train-Ticket.yaml?raw"),
-    DeathStarBench: () => import("../../diagrams/DeathStarBench-complete.yaml?raw"),
+    "Fudan SE Lab's Train Ticket": () => import("../../diagrams/Fudan-Train-Ticket-full.yaml?raw"),
+    "DeathStarBench": () => import("../../diagrams/DeathStarBench-complete.yaml?raw"),
     "Online Boutique (expanded)": () => import("../../diagrams/Online-Boutique-expanded.yaml?raw"),
     "Astronomy Shop": () => import("../../diagrams/Astronomy-Shop.yaml?raw"),
-    MiSArch: () => import("../../diagrams/MiSArch.yaml?raw"),
+    "MiSArch": () => import("../../diagrams/MiSArch.yaml?raw"),
     "MiSArch (simplified)": () => import("../../diagrams/MiSArch-simplified.yaml?raw"),
     "MiSArch (extended)": () => import("../../diagrams/MiSArch-extended.yaml?raw"),
 };
